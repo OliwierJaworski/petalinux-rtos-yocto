@@ -23,3 +23,8 @@
 [PetaLinux Tools Documentation Reference Guide](https://www.xilinx.com/support/documents/sw_manuals/xilinx2022_2/ug1144-petalinux-tools-reference-guide.pdf)
 [fix: not being able to login to root](https://adaptivesupport.amd.com/s/question/0D52E00007DmUjOSAV/root-disabled-in-20221?language=en_US&t=1655688068710)
 [device tree overlay](https://www.kernel.org/doc/Documentation/devicetree/overlay-notes.txt)
+[xilinx wiki](https://xilinx-wiki.atlassian.net/wiki/spaces/A/overview?homepageId=18844350)
+[dma driver xilinx](https://github.com/Xilinx/linux-xlnx/blob/master/drivers/dma/xilinx/xilinx_dma.c)
+[device tree info xilinx](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842279/Build+Device+Tree+Blob)
+[no bsp PynqZ2](https://discuss.pynq.io/t/bsps-for-petalinux-pynq/3824)
+[adding custom layers to petalinux](https://adaptivesupport.amd.com/s/article/Steps-to-add-custom-recipes-layers-along-with-adding-package-to-rootfs?language=en_US)
