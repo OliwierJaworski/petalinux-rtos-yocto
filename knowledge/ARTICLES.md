@@ -14,3 +14,12 @@
 [yocto walkthrough](https://www.youtube.com/watch?v=8M8U1EgnUVw)
 [petalinux to yocto](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/2787311617/PetaLinux+to+Yocto+-+Command+Cross+Reference)
 - guide in which for each petalinux command a yocto equivalent is provided.
+[create petalinux project from only .xsa](https://www.reddit.com/r/FPGA/comments/otyx7b/comment/i1n77hq/)
+[technical info --petalinux create--](https://docs.amd.com/r/en-US/ug1144-petalinux-tools-reference-guide/petalinux-create-Command-Line-Options)
+[https://docs.amd.com/r/2024.1-English/ug1144-petalinux-tools-reference-guide/petalinux-package-boot-Examplescreating image](https://docs.amd.com/r/2024.1-English/ug1144-petalinux-tools-reference-guide/petalinux-package-boot-Examples)
+- petalinux-package
+- petalinux wic commands
+[how to cofigure sd rootfs](https://github.com/Digilent/Petalinux-Zybo-Z7-20)
+[PetaLinux Tools Documentation Reference Guide](https://www.xilinx.com/support/documents/sw_manuals/xilinx2022_2/ug1144-petalinux-tools-reference-guide.pdf)
+[fix: not being able to login to root](https://adaptivesupport.amd.com/s/question/0D52E00007DmUjOSAV/root-disabled-in-20221?language=en_US&t=1655688068710)
+[device tree overlay](https://www.kernel.org/doc/Documentation/devicetree/overlay-notes.txt)
