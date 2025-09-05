@@ -29,3 +29,5 @@
 [no bsp PynqZ2](https://discuss.pynq.io/t/bsps-for-petalinux-pynq/3824)
 [adding custom layers to petalinux](https://adaptivesupport.amd.com/s/article/Steps-to-add-custom-recipes-layers-along-with-adding-package-to-rootfs?language=en_US)
 [creating custom apps in petalinux](https://docs.amd.com/r/2024.1-English/ug1144-petalinux-tools-reference-guide/Creating-and-Adding-Custom-Applications)
+[viewing device-tree from inside sd-image](https://unix.stackexchange.com/questions/289563/how-to-list-the-kernel-device-tree)
+[creating petalinux applications using sdk](https://www.youtube.com/watch?v=BD_cTpe_7lc)
