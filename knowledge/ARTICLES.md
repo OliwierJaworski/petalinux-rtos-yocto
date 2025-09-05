@@ -28,3 +28,4 @@
 [device tree info xilinx](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842279/Build+Device+Tree+Blob)
 [no bsp PynqZ2](https://discuss.pynq.io/t/bsps-for-petalinux-pynq/3824)
 [adding custom layers to petalinux](https://adaptivesupport.amd.com/s/article/Steps-to-add-custom-recipes-layers-along-with-adding-package-to-rootfs?language=en_US)
+[creating custom apps in petalinux](https://docs.amd.com/r/2024.1-English/ug1144-petalinux-tools-reference-guide/Creating-and-Adding-Custom-Applications)
