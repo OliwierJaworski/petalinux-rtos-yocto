@@ -32,3 +32,10 @@
 [viewing device-tree from inside sd-image](https://unix.stackexchange.com/questions/289563/how-to-list-the-kernel-device-tree)
 [creating petalinux applications using sdk](https://www.youtube.com/watch?v=BD_cTpe_7lc)
 [Device Tree: hardware description for everybody !](https://www.youtube.com/watch?v=Nz6aBffv-Ek)
+[approaching low level video processing using kernel/v4l2](https://www.reddit.com/r/embedded/comments/1eozk11/using_linux_uio_drivers_for_reserved_video_memory/)
+[xilinx V4L2 driver](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841767/Xilinx+V4L2+driver?f=print#:~:text=The%20pipeline%20driver%20also%20includes,CONFIG_VIDEO_XILINX%20should%20be%20enabled.)
+[Yocto Linux #3 - Hello World Kernel Module](https://www.youtube.com/watch?v=U5G_rT-GwPE)
+[solution ZynqMP PL programming](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841847/Solution+ZynqMP+PL+Programming)
+- explains how to reprogram fpga fabric for petalinx, setup device tree, 
+[Linux GPio driver](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842398/Linux+GPIO+Driver)
+- short and powerfull guide on how to access gpio peripherals and others using xilinx drivers
