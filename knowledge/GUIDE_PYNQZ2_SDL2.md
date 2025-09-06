@@ -40,6 +40,10 @@ or you can follow a hackster tutorial: [Custom Application Creation in PetaLinux
 from what i saw the easiest method is nr1 due to the fact that you just scp the file to the system and can test it that way or use a maybe use a debugger on the host have to look into that.
 method 2 is more cumbersome in my opinion.
 
+### accessing memory mapped io for linux
+[The Userspace I/O HOWTO](https://www.kernel.org/doc/html/latest/driver-api/uio-howto.html)
+[How could /dev/mem Linux directory be used in order to control the peripherals (MM/IO) ?](https://www.reddit.com/r/embeddedlinux/comments/s45cen/how_could_devmem_linux_directory_be_used_in_order/)
+
 
 
 ## used information

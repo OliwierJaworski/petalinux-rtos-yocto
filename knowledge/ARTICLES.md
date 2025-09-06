@@ -31,3 +31,4 @@
 [creating custom apps in petalinux](https://docs.amd.com/r/2024.1-English/ug1144-petalinux-tools-reference-guide/Creating-and-Adding-Custom-Applications)
 [viewing device-tree from inside sd-image](https://unix.stackexchange.com/questions/289563/how-to-list-the-kernel-device-tree)
 [creating petalinux applications using sdk](https://www.youtube.com/watch?v=BD_cTpe_7lc)
+[Device Tree: hardware description for everybody !](https://www.youtube.com/watch?v=Nz6aBffv-Ek)
