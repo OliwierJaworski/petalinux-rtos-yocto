@@ -39,3 +39,5 @@
 - explains how to reprogram fpga fabric for petalinx, setup device tree, 
 [Linux GPio driver](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842398/Linux+GPIO+Driver)
 - short and powerfull guide on how to access gpio peripherals and others using xilinx drivers
+[list with all xilinx petalinux drivers](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841873/Linux+Drivers)
+[linux loadable kernel modules](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/96960682/Linux+Loadable+Kernel+Modules)

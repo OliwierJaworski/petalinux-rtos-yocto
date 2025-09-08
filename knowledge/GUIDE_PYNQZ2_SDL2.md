@@ -43,6 +43,8 @@ method 2 is more cumbersome in my opinion.
 ### accessing memory mapped io for linux
 [The Userspace I/O HOWTO](https://www.kernel.org/doc/html/latest/driver-api/uio-howto.html)
 [How could /dev/mem Linux directory be used in order to control the peripherals (MM/IO) ?](https://www.reddit.com/r/embeddedlinux/comments/s45cen/how_could_devmem_linux_directory_be_used_in_order/)
+[xilinx guide for gpio driver with example app](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842398/Linux+GPIO+Driver)
+[generating device tree from xsa xilinx guide xsct was tested and works](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842279/Build+Device+Tree+Blob)
 
 
 
