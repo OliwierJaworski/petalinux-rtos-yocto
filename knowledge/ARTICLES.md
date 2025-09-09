@@ -41,3 +41,5 @@
 - short and powerfull guide on how to access gpio peripherals and others using xilinx drivers
 [list with all xilinx petalinux drivers](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841873/Linux+Drivers)
 [linux loadable kernel modules](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/96960682/Linux+Loadable+Kernel+Modules)
+[adding DTBO xilinx guide](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841847/Solution+ZynqMP+PL+Programming)
+[explains sysfs,gpio-keys and uio driver](https://roy-messinger.medium.com/gpio-and-petalinux-part-1-5cb6fc24d021)
