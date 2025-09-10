@@ -43,3 +43,5 @@
 [linux loadable kernel modules](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/96960682/Linux+Loadable+Kernel+Modules)
 [adding DTBO xilinx guide](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841847/Solution+ZynqMP+PL+Programming)
 [explains sysfs,gpio-keys and uio driver](https://roy-messinger.medium.com/gpio-and-petalinux-part-1-5cb6fc24d021)
+[article about using userpace I/O drivers their advantage and disadvantages](https://www.osadl.org/fileadmin/dam/rtlws/12/Koch.pdf)
+[fix for uio not showing connected devices](https://forum.digilent.com/topic/2719-how-to-register-my-device-as-uio-on-petalinux/)

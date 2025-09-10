@@ -45,8 +45,16 @@ method 2 is more cumbersome in my opinion.
 [How could /dev/mem Linux directory be used in order to control the peripherals (MM/IO) ?](https://www.reddit.com/r/embeddedlinux/comments/s45cen/how_could_devmem_linux_directory_be_used_in_order/)
 [xilinx guide for gpio driver with example app](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842398/Linux+GPIO+Driver)
 [generating device tree from xsa xilinx guide xsct was tested and works](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842279/Build+Device+Tree+Blob)
+[guide explaining different ways to access IO via petalinux and what is recommended and what not](https://roy-messinger.medium.com/gpio-and-petalinux-part-1-5cb6fc24d021)
+[guide explaining how to add uio to xilinx minized](https://www.adiuvoengineering.com/post/microzed-chronicles-uio-part-one-introduction-and-set-up)
 
+how to edit bootagrs to add (uio_pdrv_genirq.of_id="generic-uio")
+-> petalinux-config -> DTG settings -> kernel bootargs -> extra bootargs
 
+-- 10/09
+[how to add custom changes to device tree](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18842490/Testing+UIO+with+Interrupt+on+Zynq+Ultrascale)
+- adding fragment overlay to auto generated device tree(patching)
 
 ## used information
 - [petalinux tools documentation](https://docs.amd.com/r/en-US/ug1144-petalinux-tools-reference-guide/petalinux-create-Command-Line-Options)
+
