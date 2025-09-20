@@ -1,0 +1,14 @@
+menu "user packages " 
+config libsdl2  
+	 bool "libsdl2"
+	 help
+	
+config gpio-demo  
+	 bool "gpio-demo"
+	 help
+	
+config peekpoke  
+	 bool "peekpoke"
+	 help
+	
+endmenu
