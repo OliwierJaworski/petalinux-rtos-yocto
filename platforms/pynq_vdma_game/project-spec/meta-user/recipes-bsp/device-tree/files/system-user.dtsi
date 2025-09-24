@@ -1,3 +1,20 @@
 /include/ "system-conf.dtsi"
+
 / {
+    vdmaoverlay1: vdmaoverlay@1 {                      
+        compatible = "xlnx,vdma-overlay-1.0";
+        xlnx,num-fstores = <0x3>;
+        dmas = <&axi_vdma_0 0>;
+        dma-names = "vdma0";
+    };
 };
+
+&axi_gpio_0{
+    compatible = "generic-uio";
+};
+
+&axi_gpio_1{
+    compatible = "generic-uio";
+};
+
+

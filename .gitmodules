@@ -1,3 +1,6 @@
 [submodule "dts/system-device-tree-xlnx"]
 	path = dts/system-device-tree-xlnx
 	url = https://github.com/Xilinx/system-device-tree-xlnx.git
+[submodule "platforms/device_tree_tinkering/device-tree-xlnx"]
+	path = platforms/device_tree_tinkering/device-tree-xlnx
+	url = https://github.com/Xilinx/device-tree-xlnx
