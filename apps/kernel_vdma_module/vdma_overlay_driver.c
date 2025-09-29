@@ -1,8 +1,31 @@
-// SPDX-License-Identifier: GPL-2.0-or-later
+
+// SPDX-License-Identifier: GPL-2.0-or-later AND Apache-2.0
 /*
+ * Portions of this file:
+ * Copyright (C) 2021 Xilinx, Inc
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use these portions except in compliance with the License.
+ * A copy of the License is located at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, these portions
+ * of the software are distributed on an "AS IS" BASIS, WITHOUT WARRANTIES
+ * OR CONDITIONS OF ANY KIND, either express or implied. See the License
+ * for the specific language governing permissions and limitations under
+ * the License.
+ *
+ * Other portions:
  * Copyright (C) 2010-2014 Xilinx, Inc. All rights reserved.
- * Copyright (C) 2025 Oliwier Jaworski. Modifications under GPL-2.0-or-later
+ * Copyright (C) 2025 Oliwier Jaworski. Modifications under GPL-2.0-or-later.
+ *
+ * The GPL portions of this file are licensed under GPL-2.0-or-later.
+ *
+ * NOTE: This file contains code under both Apache 2.0 and GPL-2.0-or-later.
+ * Distribution must comply with the terms of both licenses where applicable.
  */
+
 
 #include "asm-generic/errno.h"
 #include "linux/device.h"
