@@ -1,14 +1,14 @@
-2025-09-24 18:18:17,562 - [DEBUG] Using xsct from : /home/Oliwier/tools/Petalinux/components/xsct/bin/xsct
-2025-09-24 18:18:17,562 - [INFO] Getting Platform info from HW file
-2025-09-24 18:18:17,562 - [DEBUG] Using the soc_family specified by user:zynq
-2025-09-24 18:18:17,574 - [DEBUG] Hardware Configuration:
-2025-09-24 18:18:17,574 - [DEBUG] MACHINE     = "None"
-2025-09-24 18:18:17,574 - [DEBUG] DEVICE_ID   = "7z020"
-2025-09-24 18:18:17,574 - [DEBUG] SOC_FAMILY  = "zynq"
-2025-09-24 18:18:17,574 - [DEBUG] SOC_VARIANT = ""
-2025-09-24 18:18:17,581 - [INFO] Silentconfig project
-2025-09-24 18:18:17,582 - [DEBUG] Running CMD: yes "" | env KCONFIG_CONFIG=/home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/config conf /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/configs/Kconfig
-2025-09-24 18:18:17,586 - [DEBUG] *
+2025-10-11 15:26:32,935 - [DEBUG] Using xsct from : /home/Oliwier/tools/Petalinux/components/xsct/bin/xsct
+2025-10-11 15:26:32,935 - [INFO] Getting Platform info from HW file
+2025-10-11 15:26:32,935 - [DEBUG] Using the soc_family specified by user:zynq
+2025-10-11 15:26:32,947 - [DEBUG] Hardware Configuration:
+2025-10-11 15:26:32,947 - [DEBUG] MACHINE     = "None"
+2025-10-11 15:26:32,947 - [DEBUG] DEVICE_ID   = "7z020"
+2025-10-11 15:26:32,947 - [DEBUG] SOC_FAMILY  = "zynq"
+2025-10-11 15:26:32,947 - [DEBUG] SOC_VARIANT = ""
+2025-10-11 15:26:32,951 - [INFO] Silentconfig project
+2025-10-11 15:26:32,951 - [DEBUG] Running CMD: yes "" | env KCONFIG_CONFIG=/home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/config conf /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/configs/Kconfig
+2025-10-11 15:26:32,956 - [DEBUG] *
 * PetaLinux System Configuration
 *
 ZYNQ Configuration (SYSTEM_ZYNQ) [Y/?] y
@@ -253,9 +253,9 @@ user layer 0 (USER_LAYER_0) []
 #
 # configuration written to /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/config
 #
-2025-09-24 18:18:17,638 - [INFO] Silentconfig rootfs
-2025-09-24 18:18:17,638 - [DEBUG] Running CMD: yes "" | env KCONFIG_CONFIG=/home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/rootfs_config conf /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/rootfsconfigs/Kconfig
-2025-09-24 18:18:17,646 - [DEBUG] *
+2025-10-11 15:26:33,009 - [INFO] Silentconfig rootfs
+2025-10-11 15:26:33,009 - [DEBUG] Running CMD: yes "" | env KCONFIG_CONFIG=/home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/rootfs_config conf /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/rootfsconfigs/Kconfig
+2025-10-11 15:26:33,018 - [DEBUG] *
 * Configuration
 *
 *
@@ -3564,8 +3564,8 @@ packagegroup-petalinux-utils-dev (packagegroup-petalinux-utils-dev) [N/y/?]
 *
 * packagegroup-petalinux-v4lutils 
 *
-packagegroup-petalinux-v4lutils (packagegroup-petalinux-v4lutils) [N/y/?] 
-packagegroup-petalinux-v4lutils-dbg (packagegroup-petalinux-v4lutils-dbg) [N/y/?] 
+packagegroup-petalinux-v4lutils (packagegroup-petalinux-v4lutils) [Y/n/?] 
+packagegroup-petalinux-v4lutils-dbg (packagegroup-petalinux-v4lutils-dbg) [Y/n/?] 
 packagegroup-petalinux-v4lutils-dev (packagegroup-petalinux-v4lutils-dev) [N/y/?] 
 *
 * packagegroup-petalinux-vitis-acceleration-essential 
@@ -3610,4 +3610,4 @@ Add Users to Sudo users (ADD_USERS_TO_SUDOERS) [petalinux]
 #
 # configuration written to /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/rootfs_config
 #
-2025-09-24 18:18:17,650 - [INFO] Generating configuration files
+2025-10-11 15:26:33,021 - [INFO] Generating configuration files

@@ -3804,8 +3804,8 @@ CONFIG_u-boot-tools=y
 #
 # packagegroup-petalinux-v4lutils 
 #
-# CONFIG_packagegroup-petalinux-v4lutils is not set
-# CONFIG_packagegroup-petalinux-v4lutils-dbg is not set
+CONFIG_packagegroup-petalinux-v4lutils=y
+CONFIG_packagegroup-petalinux-v4lutils-dbg=y
 # CONFIG_packagegroup-petalinux-v4lutils-dev is not set
 
 #

@@ -2,19 +2,29 @@
 
 / {
     vdmaoverlay1: vdmaoverlay@1 {                      
-        compatible = "xlnx,vdma-overlay-1.0";
-        xlnx,num-fstores = <0x3>;
-        dmas = <&axi_vdma_0 0>;
-        dma-names = "vdma0";
+    compatible = "xlnx,vdma-overlay-1.0";
+    xlnx,num-fstores = <0x3>;
+    dmas = <&axi_vdma_0 0>;
+    dma-names = "vdma0";
+    };
+
+    frame_buffer1: frame_buffer@1 {                      
+    compatible = "generic_uio";
+    reg = <0x10000000 0x01400000>;
     };
 };
 
+&axi_vdma_0{
+    reg = <0x43000000 0x10000>;
+    compatible = "generic_uio";
+};
+
 &axi_gpio_0{
-    compatible = "generic-uio";
+    compatible = "generic_uio";
 };
 
 &axi_gpio_1{
-    compatible = "generic-uio";
+    compatible = "generic_uio";
 };
 
 
