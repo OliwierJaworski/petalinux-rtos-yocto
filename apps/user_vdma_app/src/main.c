@@ -113,7 +113,8 @@ vdma_setup(vdma_handle* handle){
     }
 
     u_int32_t* vcrp = ((u_int32_t*)handle->vdma_crp);
-    vcrp[OFFSET_VDMA_MM2S_CONTROL_REGISTER/4] = 0x03;
+    vcrp[OFFSET_VDMA_MM2S_CONTROL_REGISTER/4] = 0x04; //reset 
+    vcrp[OFFSET_VDMA_MM2S_CONTROL_REGISTER/4] = 0x03; //start
     vcrp[OFFSET_VDMA_MM2S_FRAMEBUFFER1 /4] = handle->bufferHandle[0].PhysicalAddr;
     vcrp[OFFSET_VDMA_MM2S_FRAMEBUFFER2 /4] = handle->bufferHandle[1].PhysicalAddr;
     vcrp[OFFSET_VDMA_MM2S_FRAMEBUFFER3 /4] = handle->bufferHandle[2].PhysicalAddr;
