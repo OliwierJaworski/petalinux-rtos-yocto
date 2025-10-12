@@ -9,6 +9,8 @@
 #include <unistd.h>
 #include <err.h>
 #include <unistd.h> 
+//#include <SDL2/SDL.h>
+#include "test.h"
 
 //device tree specific
 #define DEV_VDMA_ADDR                           0x43000000
@@ -71,7 +73,7 @@ typedef struct{
 
 int 
 vdma_setup(vdma_handle* handle){
-    uint width = 1920, height = 1080, depth = 3;
+    u_int32_t width = 1920, height = 1080, depth = 3;
     int pg_offset=0;
 
     handle->baseAddr = DEV_VDMA_ADDR;
@@ -182,6 +184,7 @@ register_check(vdma_handle* handle){
 
 int 
 main(int argc, char* argv[]){
+    test();
     vdma_handle vh;
     vdma_setup(&vh);
 

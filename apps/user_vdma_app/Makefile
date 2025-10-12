@@ -1,17 +1,25 @@
 TARGET = vdma_control
-LIBS = -lm
 CC = arm-linux-gnueabihf-gcc
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -std=c17
+HEADERS_INCLUDE = -Iinclude
+CFLAGS += $(HEADERS_INCLUDE)
+LIBS = -lm 
 
 .PHONY: default all clean
 
 default: $(TARGET)
 all: default
 
-OBJECTS = $(patsubst %.c, %.o, $(wildcard *.c))
-HEADERS = $(wildcard *.h)
+SRC_DIR = src
+SOURCES = $(wildcard $(SRC_DIR)/*c)
 
-%.o: %.c $(HEADERS)
+HEADER_DIR = include
+
+OBJ_DIR = obj
+OBJECTS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SOURCES))
+HEADERS = $(wildcard *.h $(HEADER_DIR)/*.h)
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 .PRECIOUS: $(TARGET) $(OBJECTS)
@@ -20,5 +28,5 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -Wall $(LIBS) -o $@
 
 clean:
-	-rm -f *.o
+	-rm -f $(OBJ_DIR)/*.o
 	-rm -f $(TARGET)
