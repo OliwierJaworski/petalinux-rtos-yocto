@@ -3,9 +3,9 @@
 
 #include "utils.h"
 
-int graphics_setup(uintptr_t buffptr[3]);
-int graphics_draw(uint32_t* buffer);
-int graphics_remove();
+int vGraphics_setup(uintptr_t buffptr[3]);
+int vGraphics_draw();
+int vGraphics_remove();
 
 
 void DEBUG_recvd_buffer_addr(va_list args);

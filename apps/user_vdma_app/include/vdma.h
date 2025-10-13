@@ -36,7 +36,6 @@ typedef struct{
     uintptr_t PhysicalAddr; 
 }buffer_t;
 
-
 typedef struct{
     int baseAddr;
     int vdmafp;

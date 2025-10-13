@@ -75,12 +75,6 @@ vdma_regcheck(vdma_handle* handle){
     TRACE(LOG_DEBUG, LOG_ORIGIN("dump of first 20 VDMA control registers"), DEBUG_f20_ctrl_regs_vdma,
         handle->vdma_crp);
     
-    uintptr_t buffptr[3];
-    for(int i =0; i<3; i++){
-        buffptr[i] = handle->bufferHandle[i].VirtualAddr;
-    }
-    graphics_setup(buffptr);
-
     TRACE(LOG_DEBUG, LOG_ORIGIN("dump of 20 values * 3 buffers of RGB -> not aligned"), DEBUG_virt_buff_dump_first_20x3,
         handle->bufferHandle);
     TRACE(LOG_TRACE, LOG_ORIGIN("end vdma_regcheck"), NULL);
