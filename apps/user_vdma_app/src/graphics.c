@@ -17,18 +17,18 @@ uint32_t pixel_format = SDL_PIXELFORMAT_RGB24;
 
 int 
 graphics_setup(uintptr_t buffptr[3]){
+    TRACE(LOG_TRACE, LOG_ORIGIN("begin graphics_setup"), NULL);
     SDL_SetHint(SDL_HINT_VIDEODRIVER, "offscreen");
     
     //putenv("SDL_VIDEODRIVER=dummy");
     memcpy((void*)Ibuffptr, (void*)buffptr, sizeof(Ibuffptr) );
-    for (int i = 0; i < 3; i++) {
-        printf("Ibuffptr[%d] = %p\n", i, (void*)Ibuffptr[i]);
-    }
+    TRACE(LOG_DEBUG, LOG_ORIGIN("memcpy, register dump"), DEBUG_recvd_buffer_addr, Ibuffptr);
 
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't initialize SDL: %s", SDL_GetError());
         return 3;
     }
+
     /*for(int i = 0; i<3; i++){
         surf[i] = SDL_CreateRGBSurfaceWithFormatFrom((void*)buffptr[i], WIDTH, HEIGHT, depth, pitch, pixel_format);
         if (surf[i] == NULL) {
@@ -56,11 +56,12 @@ graphics_setup(uintptr_t buffptr[3]){
     for (int i = 0; i < 3; i++) {
         memcpy((void*)buffptr[i], tmp->pixels, tmp->h * tmp->pitch);
     }
-
+    TRACE(LOG_TRACE, LOG_ORIGIN("end graphics_setup"), NULL);
 }
 
 int 
 graphics_draw(uint32_t* buffer){
+    
     SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
     SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);

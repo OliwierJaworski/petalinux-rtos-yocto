@@ -29,6 +29,7 @@
 #define VDMA_CONTROL_REGISTER_START             0x3
 #define VDMA_CONTROL_REGISTER_CIRCULAR_PARK     0x2
 #define VDMA_CONTROL_REGISTER_RESET             0x4
+#define VDMA_CONTROL_STATE_STOP                 0x0
 
 typedef struct{
     uintptr_t VirtualAddr;

@@ -2,11 +2,19 @@ TARGET = vdma_control
 # commented out CC because it was using wrong sysroot correc is:--sysroot=/home/--path-to-sdk-sysroot--/sysroots/cortexa9t2hf-neon-xilinx-linux-gnueabi
 # because of this it could not find SDL2
 #CC = arm-linux-gnueabihf-gcc
-CFLAGS = -g -Wall -std=c17
+
+#VERBOSITY LEVELS
+#LOG_ERROR
+#LOG_TRACE
+#LOG_DEBUG
+
+CFLAGS = -g -Wall -std=c17 
 HEADERS_INCLUDE = -Iinclude
 CFLAGS += $(HEADERS_INCLUDE)
+CFLAGS += -DVERBOSITY=LOG_DEBUG
 LDFLAGS = -L/home/Oliwier/Workspace/vdma_sdk/sysroots/cortexa9t2hf-neon-xilinx-linux-gnueabi/usr/lib
 LIBS = -lm -lSDL2  
+
 
 .PHONY: default all clean
 

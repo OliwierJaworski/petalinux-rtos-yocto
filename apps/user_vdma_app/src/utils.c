@@ -10,20 +10,17 @@ TRACE(int verbosity,const char* msg, var_printer_t printer, ...){
         #if VERBOSITY >= 1
         case LOG_ERROR:
             fprintf(stderr,
-                CLR_RED "[ERROR]" CLR_RESET " %s::%s (line %u)\n"
-                "  cause: %s (%s)\n",
-                __FILE__, __func__, __LINE__,
-                msg, strerror(errno));
+                CLR_RED "\n[ERROR]" CLR_RESET "%s, errno: %s\n",msg, strerror(errno));
+                if(!errno)
+                    exit(1); // in case its a runtime error which cant be found by errno
             break;
         #if VERBOSITY >= 2
         case LOG_TRACE:
-            printf(CLR_YELLOW "[TRACE]" CLR_RESET " %s::%s (line %u) — %s\n",
-               __FILE__, __func__, __LINE__, msg);
+            printf(CLR_YELLOW "\n[TRACE]" CLR_RESET "%s\n", msg);
             break;
         #if VERBOSITY >= 3
         case LOG_DEBUG:
-            printf(CLR_CYAN "[DEBUG]" CLR_RESET " %s::%s (line %u) (message: %s)\n",
-                __FILE__, __func__, __LINE__, msg);
+            printf(CLR_CYAN "\n[DEBUG]" CLR_RESET "%s\n",msg);
             if (printer) {
                 printer(args);   // pass the va_list to the custom printer
             }

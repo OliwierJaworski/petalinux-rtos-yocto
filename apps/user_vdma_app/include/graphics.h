@@ -7,4 +7,6 @@ int graphics_setup(uintptr_t buffptr[3]);
 int graphics_draw(uint32_t* buffer);
 int graphics_remove();
 
+
+void DEBUG_recvd_buffer_addr(va_list args);
 #endif
