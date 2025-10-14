@@ -31,6 +31,7 @@ find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 set(OE_QMAKE_PATH_EXTERNAL_HOST_BINS "/usr/bin")
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -39,9 +40,13 @@ set(PROJECT_SOURCES
         mainwindow.ui
 )
 
-add_executable(Led_controller ${PROJECT_SOURCES})
+add_executable(Led_controller ${PROJECT_SOURCES}
+
+    gpio.h gpio.cpp
+)
 
 target_link_libraries(Led_controller PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(Led_controller PRIVATE Qt5::Widgets)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
