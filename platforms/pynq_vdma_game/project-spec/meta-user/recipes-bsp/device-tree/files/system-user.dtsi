@@ -1,6 +1,17 @@
 /include/ "system-conf.dtsi"
 
 / {
+    reserved-memory {
+        #address-cells = <1>;
+        #size-cells = <1>;
+        ranges;
+
+        fb_mem: framebuffer@10000000 {
+            reg = <0x10000000 0x02000000>;  /* same as your framebuffer */
+            no-map;
+        };
+    };
+
     vdmaoverlay1: vdmaoverlay@1 {                      
     compatible = "xlnx,vdma-overlay-1.0";
     xlnx,num-fstores = <0x3>;
@@ -8,10 +19,32 @@
     dma-names = "vdma0";
     };
 
-    frame_buffer1: frame_buffer@1 {                      
-    compatible = "generic_uio";
-    reg = <0x10000000 0x01400000>;
+    frame_buffer0: frame_buffer@0 {                      
+    compatible = "simple-framebuffer";
+    reg = <0x10000000 0x02000000>;
+    width = <1920>;
+    height = <1080>;
+    stride = <7680>;
+    format = "x8r8g8b8";
+    status = "okay";
     };
+
+    usb_phy0: phy0 {
+    compatible = "ulpi-phy";
+    #phy-cells = <0>;
+    reg = <0xe0002000 0x1000>;
+    view-port = <0x170>;
+    drv-vbus;
+    };
+
+    chosen {
+        linux,framebuffer = <&frame_buffer0>;
+    };
+};
+
+&usb0{
+    dr_mode = "host";
+    usb-phy = <&usb_phy0>;
 };
 
 &axi_vdma_0{

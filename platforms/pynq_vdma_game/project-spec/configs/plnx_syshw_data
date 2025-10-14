@@ -1,5 +1,5 @@
 device_id: 7z020
-hw_design_name: design_3_wrapper
+hw_design_name: design_2_wrapper
 processor:
     ps7_cortexa9_0:
         arch: arm

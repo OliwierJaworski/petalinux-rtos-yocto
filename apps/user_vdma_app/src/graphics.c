@@ -32,7 +32,7 @@ vGraphics_setup(uintptr_t buffptr[3]){
     *VG_handler = (vdma_graphics_t){ .vinfo = (video_info_t){.width = 1920,
                                                              .height = 1080,
                                                              .depth = 24,
-                                                             .pitch = 3,
+                                                             .pitch = 1920 * 3,
                                                              .pixel_format = SDL_PIXELFORMAT_RGB24}// in reality RBG!
                                     };
     
@@ -40,15 +40,15 @@ vGraphics_setup(uintptr_t buffptr[3]){
         TRACE(LOG_DEBUG, LOG_ORIGIN("memcpy, register dump"), DEBUG_recvd_buffer_addr, VG_handler->buff_ptr);
     
     SDL_SetHint(SDL_HINT_VIDEODRIVER, "offscreen");
-    
+
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
         TRACE(LOG_ERROR, LOG_ORIGIN(SDL_GetError()), NULL);
 
     video_info_t * vinfo_tmp = {&VG_handler->vinfo};
 
     for(int i = 0; i<3; i++){
-        VG_handler->framebuffers[i] = SDL_CreateRGBSurfaceWithFormat(0, vinfo_tmp->width,
-             vinfo_tmp->height, vinfo_tmp->depth, vinfo_tmp->pixel_format);
+        //VG_handler->framebuffers[i] = SDL_CreateRGBSurfaceWithFormat(0, vinfo_tmp->width, vinfo_tmp->height, vinfo_tmp->depth, vinfo_tmp->pixel_format);
+        VG_handler->framebuffers[i] = SDL_CreateRGBSurfaceWithFormatFrom((void*)buffptr[i], vinfo_tmp->width, vinfo_tmp->height, vinfo_tmp->depth, vinfo_tmp->pitch, vinfo_tmp->pixel_format);
         if (!VG_handler->framebuffers[i])
             TRACE(LOG_ERROR, LOG_ORIGIN(SDL_GetError()), NULL);
             
@@ -66,9 +66,6 @@ vGraphics_setup(uintptr_t buffptr[3]){
 int 
 graphics_draw(uint32_t* buffer){
     
-    //SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
-    //SDL_RenderClear(renderer);
-    //SDL_RenderPresent(renderer);
 }
 
 int
@@ -79,6 +76,5 @@ vGraphics_remove(){
     SDL_DestroyRenderer(VG_handler->renderer);
     free(VG_handler);
     TRACE(LOG_TRACE, LOG_ORIGIN("end graphics_remove"), NULL);
+    SDL_Quit();
 }
-
-//SDL_CreateRGBSurfaceWithFormatFrom(

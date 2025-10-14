@@ -5,3 +5,4 @@ CONFIG_gpio-demo
 CONFIG_peekpoke
 
 CONFIG_libsdl2
+CONFIG_xf86-video-fbdev

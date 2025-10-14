@@ -1606,7 +1606,7 @@ CONFIG_run-postinsts=y
 #
 # libx11 
 #
-# CONFIG_libx11 is not set
+CONFIG_libx11=y
 # CONFIG_libx11-dbg is not set
 # CONFIG_libx11-xcb is not set
 # CONFIG_libx11-dev is not set
@@ -3379,14 +3379,14 @@ CONFIG_u-boot-tools=y
 #
 # xserver-xf86-config 
 #
-# CONFIG_xserver-xf86-config is not set
+CONFIG_xserver-xf86-config=y
 # CONFIG_xserver-xf86-config-dbg is not set
 # CONFIG_xserver-xf86-config-dev is not set
 
 #
 # xserver-xorg 
 #
-# CONFIG_xserver-xorg is not set
+CONFIG_xserver-xorg=y
 # CONFIG_xserver-xorg-extension-record is not set
 # CONFIG_xserver-xorg-dev is not set
 # CONFIG_xserver-xorg-extension-glx is not set
@@ -3501,7 +3501,7 @@ CONFIG_u-boot-tools=y
 #
 # libmatchbox 
 #
-# CONFIG_libmatchbox is not set
+CONFIG_libmatchbox=y
 # CONFIG_libmatchbox-dev is not set
 # CONFIG_libmatchbox-dbg is not set
 
@@ -3549,14 +3549,14 @@ CONFIG_u-boot-tools=y
 #
 # xkeyboard-config 
 #
-# CONFIG_xkeyboard-config is not set
+CONFIG_xkeyboard-config=y
 # CONFIG_xkeyboard-config-dbg is not set
 # CONFIG_xkeyboard-config-dev is not set
 
 #
 # matchbox-keyboard 
 #
-# CONFIG_matchbox-keyboard is not set
+CONFIG_matchbox-keyboard=y
 # CONFIG_matchbox-keyboard-dbg is not set
 # CONFIG_matchbox-keyboard-applet is not set
 # CONFIG_matchbox-keyboard-dev is not set
@@ -3565,7 +3565,7 @@ CONFIG_u-boot-tools=y
 #
 # matchbox-session 
 #
-# CONFIG_matchbox-session is not set
+CONFIG_matchbox-session=y
 # CONFIG_matchbox-session-dev is not set
 # CONFIG_matchbox-session-dbg is not set
 
@@ -3607,14 +3607,14 @@ CONFIG_u-boot-tools=y
 #
 # mini-x-session 
 #
-# CONFIG_mini-x-session is not set
+CONFIG_mini-x-session=y
 # CONFIG_mini-x-session-dbg is not set
 # CONFIG_mini-x-session-dev is not set
 
 #
 # pcmanfm 
 #
-# CONFIG_pcmanfm is not set
+CONFIG_pcmanfm=y
 # CONFIG_pcmanfm-dbg is not set
 # CONFIG_pcmanfm-dev is not set
 
@@ -3648,7 +3648,7 @@ CONFIG_u-boot-tools=y
 #
 # matchbox-terminal 
 #
-# CONFIG_matchbox-terminal is not set
+CONFIG_matchbox-terminal=y
 # CONFIG_matchbox-terminal-dbg is not set
 # CONFIG_matchbox-terminal-dev is not set
 
@@ -3687,14 +3687,14 @@ CONFIG_u-boot-tools=y
 #
 # matchbox-wm 
 #
-# CONFIG_matchbox-wm is not set
+CONFIG_matchbox-wm=y
 # CONFIG_matchbox-wm-dbg is not set
 # CONFIG_matchbox-wm-dev is not set
 
 #
 # xserver-nodm-init 
 #
-# CONFIG_xserver-nodm-init is not set
+CONFIG_xserver-nodm-init=y
 # CONFIG_xserver-nodm-init-dbg is not set
 # CONFIG_xserver-nodm-init-dev is not set
 
@@ -3775,10 +3775,10 @@ CONFIG_u-boot-tools=y
 #
 # packagegroup-petalinux-qt 
 #
-# CONFIG_packagegroup-petalinux-qt is not set
+CONFIG_packagegroup-petalinux-qt=y
 # CONFIG_packagegroup-petalinux-qt-dbg is not set
 # CONFIG_packagegroup-petalinux-qt-dev is not set
-# CONFIG_imageclass-populate-sdk-qt5 is not set
+CONFIG_imageclass-populate-sdk-qt5=y
 
 #
 # packagegroup-petalinux-qt-extended 
@@ -3818,7 +3818,7 @@ CONFIG_packagegroup-petalinux-v4lutils-dbg=y
 #
 # packagegroup-petalinux-x11 
 #
-# CONFIG_packagegroup-petalinux-x11 is not set
+CONFIG_packagegroup-petalinux-x11=y
 # CONFIG_packagegroup-petalinux-x11-dbg is not set
 # CONFIG_packagegroup-petalinux-x11-dev is not set
 

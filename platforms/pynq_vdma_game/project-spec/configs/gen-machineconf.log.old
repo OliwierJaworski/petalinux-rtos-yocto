@@ -1,14 +1,14 @@
-2025-10-11 15:26:32,935 - [DEBUG] Using xsct from : /home/Oliwier/tools/Petalinux/components/xsct/bin/xsct
-2025-10-11 15:26:32,935 - [INFO] Getting Platform info from HW file
-2025-10-11 15:26:32,935 - [DEBUG] Using the soc_family specified by user:zynq
-2025-10-11 15:26:32,947 - [DEBUG] Hardware Configuration:
-2025-10-11 15:26:32,947 - [DEBUG] MACHINE     = "None"
-2025-10-11 15:26:32,947 - [DEBUG] DEVICE_ID   = "7z020"
-2025-10-11 15:26:32,947 - [DEBUG] SOC_FAMILY  = "zynq"
-2025-10-11 15:26:32,947 - [DEBUG] SOC_VARIANT = ""
-2025-10-11 15:26:32,951 - [INFO] Silentconfig project
-2025-10-11 15:26:32,951 - [DEBUG] Running CMD: yes "" | env KCONFIG_CONFIG=/home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/config conf /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/configs/Kconfig
-2025-10-11 15:26:32,956 - [DEBUG] *
+2025-10-14 00:56:41,501 - [DEBUG] Using xsct from : /home/Oliwier/tools/Petalinux/components/xsct/bin/xsct
+2025-10-14 00:56:41,501 - [INFO] Getting Platform info from HW file
+2025-10-14 00:56:41,501 - [DEBUG] Using the soc_family specified by user:zynq
+2025-10-14 00:56:41,513 - [DEBUG] Hardware Configuration:
+2025-10-14 00:56:41,513 - [DEBUG] MACHINE     = "None"
+2025-10-14 00:56:41,513 - [DEBUG] DEVICE_ID   = "7z020"
+2025-10-14 00:56:41,513 - [DEBUG] SOC_FAMILY  = "zynq"
+2025-10-14 00:56:41,513 - [DEBUG] SOC_VARIANT = ""
+2025-10-14 00:56:41,517 - [INFO] Silentconfig project
+2025-10-14 00:56:41,517 - [DEBUG] Running CMD: yes "" | env KCONFIG_CONFIG=/home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/config conf /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/configs/Kconfig
+2025-10-14 00:56:41,521 - [DEBUG] *
 * PetaLinux System Configuration
 *
 ZYNQ Configuration (SYSTEM_ZYNQ) [Y/?] y
@@ -253,9 +253,9 @@ user layer 0 (USER_LAYER_0) []
 #
 # configuration written to /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/config
 #
-2025-10-11 15:26:33,009 - [INFO] Silentconfig rootfs
-2025-10-11 15:26:33,009 - [DEBUG] Running CMD: yes "" | env KCONFIG_CONFIG=/home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/rootfs_config conf /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/rootfsconfigs/Kconfig
-2025-10-11 15:26:33,018 - [DEBUG] *
+2025-10-14 00:56:41,573 - [INFO] Silentconfig rootfs
+2025-10-14 00:56:41,573 - [DEBUG] Running CMD: yes "" | env KCONFIG_CONFIG=/home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/rootfs_config conf /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/rootfsconfigs/Kconfig
+2025-10-14 00:56:41,582 - [DEBUG] *
 * Configuration
 *
 *
@@ -1651,7 +1651,7 @@ libwebp-dbg (libwebp-dbg) [N/y/?]
 *
 * libx11 
 *
-libx11 (libx11) [N/y/?] 
+libx11 (libx11) [Y/n/?] 
 libx11-dbg (libx11-dbg) [N/y/?] 
 libx11-xcb (libx11-xcb) [N/y/?] 
 libx11-dev (libx11-dev) [N/y/?] 
@@ -3198,13 +3198,13 @@ xcursor-transparent-theme-dbg (xcursor-transparent-theme-dbg) [N/y/?]
 *
 * xserver-xf86-config 
 *
-xserver-xf86-config (xserver-xf86-config) [N/y/?] 
+xserver-xf86-config (xserver-xf86-config) [Y/n/?] 
 xserver-xf86-config-dbg (xserver-xf86-config-dbg) [N/y/?] 
 xserver-xf86-config-dev (xserver-xf86-config-dev) [N/y/?] 
 *
 * xserver-xorg 
 *
-xserver-xorg (xserver-xorg) [N/y/?] 
+xserver-xorg (xserver-xorg) [Y/n/?] 
 xserver-xorg-extension-record (xserver-xorg-extension-record) [N/y/?] 
 xserver-xorg-dev (xserver-xorg-dev) [N/y/?] 
 xserver-xorg-extension-glx (xserver-xorg-extension-glx) [N/y/?] 
@@ -3303,7 +3303,7 @@ libfm-extra-dbg (libfm-extra-dbg) [N/y/?]
 *
 * libmatchbox 
 *
-libmatchbox (libmatchbox) [N/y/?] 
+libmatchbox (libmatchbox) [Y/n/?] 
 libmatchbox-dev (libmatchbox-dev) [N/y/?] 
 libmatchbox-dbg (libmatchbox-dbg) [N/y/?] 
 *
@@ -3344,13 +3344,13 @@ xcb-util-dbg (xcb-util-dbg) [N/y/?]
 *
 * xkeyboard-config 
 *
-xkeyboard-config (xkeyboard-config) [N/y/?] 
+xkeyboard-config (xkeyboard-config) [Y/n/?] 
 xkeyboard-config-dbg (xkeyboard-config-dbg) [N/y/?] 
 xkeyboard-config-dev (xkeyboard-config-dev) [N/y/?] 
 *
 * matchbox-keyboard 
 *
-matchbox-keyboard (matchbox-keyboard) [N/y/?] 
+matchbox-keyboard (matchbox-keyboard) [Y/n/?] 
 matchbox-keyboard-dbg (matchbox-keyboard-dbg) [N/y/?] 
 matchbox-keyboard-applet (matchbox-keyboard-applet) [N/y/?] 
 matchbox-keyboard-dev (matchbox-keyboard-dev) [N/y/?] 
@@ -3358,7 +3358,7 @@ matchbox-keyboard-im (matchbox-keyboard-im) [N/y/?]
 *
 * matchbox-session 
 *
-matchbox-session (matchbox-session) [N/y/?] 
+matchbox-session (matchbox-session) [Y/n/?] 
 matchbox-session-dev (matchbox-session-dev) [N/y/?] 
 matchbox-session-dbg (matchbox-session-dbg) [N/y/?] 
 *
@@ -3396,13 +3396,13 @@ mesa-demos-dbg (mesa-demos-dbg) [N/y/?]
 *
 * mini-x-session 
 *
-mini-x-session (mini-x-session) [N/y/?] 
+mini-x-session (mini-x-session) [Y/n/?] 
 mini-x-session-dbg (mini-x-session-dbg) [N/y/?] 
 mini-x-session-dev (mini-x-session-dev) [N/y/?] 
 *
 * pcmanfm 
 *
-pcmanfm (pcmanfm) [N/y/?] 
+pcmanfm (pcmanfm) [Y/n/?] 
 pcmanfm-dbg (pcmanfm-dbg) [N/y/?] 
 pcmanfm-dev (pcmanfm-dev) [N/y/?] 
 *
@@ -3431,7 +3431,7 @@ rsvg (rsvg) [N/y/?]
 *
 * matchbox-terminal 
 *
-matchbox-terminal (matchbox-terminal) [N/y/?] 
+matchbox-terminal (matchbox-terminal) [Y/n/?] 
 matchbox-terminal-dbg (matchbox-terminal-dbg) [N/y/?] 
 matchbox-terminal-dev (matchbox-terminal-dev) [N/y/?] 
 *
@@ -3464,13 +3464,13 @@ matchbox-theme-sato-dbg (matchbox-theme-sato-dbg) [N/y/?]
 *
 * matchbox-wm 
 *
-matchbox-wm (matchbox-wm) [N/y/?] 
+matchbox-wm (matchbox-wm) [Y/n/?] 
 matchbox-wm-dbg (matchbox-wm-dbg) [N/y/?] 
 matchbox-wm-dev (matchbox-wm-dev) [N/y/?] 
 *
 * xserver-nodm-init 
 *
-xserver-nodm-init (xserver-nodm-init) [N/y/?] 
+xserver-nodm-init (xserver-nodm-init) [Y/n/?] 
 xserver-nodm-init-dbg (xserver-nodm-init-dbg) [N/y/?] 
 xserver-nodm-init-dev (xserver-nodm-init-dev) [N/y/?] 
 *
@@ -3539,10 +3539,10 @@ packagegroup-petalinux-python-modules-dev (packagegroup-petalinux-python-modules
 *
 * packagegroup-petalinux-qt 
 *
-packagegroup-petalinux-qt (packagegroup-petalinux-qt) [N/y/?] 
+packagegroup-petalinux-qt (packagegroup-petalinux-qt) [Y/n/?] 
 packagegroup-petalinux-qt-dbg (packagegroup-petalinux-qt-dbg) [N/y/?] 
 packagegroup-petalinux-qt-dev (packagegroup-petalinux-qt-dev) [N/y/?] 
-populate_sdk_qt5 (imageclass-populate-sdk-qt5) [N/y/?] 
+populate_sdk_qt5 (imageclass-populate-sdk-qt5) [Y/n/?] 
 *
 * packagegroup-petalinux-qt-extended 
 *
@@ -3576,7 +3576,7 @@ packagegroup-petalinux-vitis-acceleration-essential-dev (packagegroup-petalinux-
 *
 * packagegroup-petalinux-x11 
 *
-packagegroup-petalinux-x11 (packagegroup-petalinux-x11) [N/y/?] 
+packagegroup-petalinux-x11 (packagegroup-petalinux-x11) [Y/n/?] 
 packagegroup-petalinux-x11-dbg (packagegroup-petalinux-x11-dbg) [N/y/?] 
 packagegroup-petalinux-x11-dev (packagegroup-petalinux-x11-dev) [N/y/?] 
 *
@@ -3600,6 +3600,7 @@ choice[1-2]: *
 libsdl2 (libsdl2) [Y/n/?] 
 gpio-demo (gpio-demo) [N/y/?] 
 peekpoke (peekpoke) [N/y/?] 
+xf86-video-fbdev (xf86-video-fbdev) [N/y/?] 
 *
 * PetaLinux RootFS Settings
 *
@@ -3610,4 +3611,4 @@ Add Users to Sudo users (ADD_USERS_TO_SUDOERS) [petalinux]
 #
 # configuration written to /home/Oliwier/Github/petalinux-rtos-yocto/platforms/pynq_vdma_game/project-spec/configs/rootfs_config
 #
-2025-10-11 15:26:33,021 - [INFO] Generating configuration files
+2025-10-14 00:56:41,585 - [INFO] Generating configuration files

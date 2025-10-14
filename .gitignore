@@ -1,2 +1,18 @@
 platforms/pynq_vdma_game/project-spec/configs/.Xil/
 
+
+apps/user_vdma_app/.cache/clangd/index/
+
+apps/user_vdma_app/obj/
+
+apps/user_vdma_app/compile_commands.json
+
+apps/user_vdma_app/main.o
+
+apps/user_vdma_app/vdma_control
+
+platforms/device_tree_tinkering/
+
+platforms/pynq_vdma_game/.petalinux/metadata
+
+platforms/pynq_vdma_game/project-spec/configs/.statistics

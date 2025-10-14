@@ -11,4 +11,8 @@ config peekpoke
 	 bool "peekpoke"
 	 help
 	
+config xf86-video-fbdev  
+	 bool "xf86-video-fbdev"
+	 help
+	
 endmenu
