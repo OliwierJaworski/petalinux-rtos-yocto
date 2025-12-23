@@ -1,0 +1,48 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build cortexA9_0",
+            "options": {
+                "statusbar": {
+                    "label": "ts"
+                }
+            },
+            "type": "shell",
+            "command": "cmd.exe",
+            "args": [
+                "/c",
+                "M:\\Xilinx\\Vitis\\2024.2\\settings64.bat && make -C workspace/FlappyBird_InC/Debug all"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "clean cortexA9_0",
+            "type": "shell",
+            "command": "cmd.exe",
+            "args": [
+                "/c",
+                "M:\\Xilinx\\Vitis\\2024.2\\settings64.bat && make -C workspace/FlappyBird_InC/Debug clean"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "gdb APU init",
+            "type": "shell",
+            "command": "xsdb",
+            "args": [
+                "-interactive",
+                "./dbg_init_A9_0.tcl"
+            ],
+            "options": {
+                "env": {
+                    "PATH": "M:\\Xilinx\\Vitis\\2024.2\\bin;${env:PATH}"
+                }
+            },
+            "problemMatcher": []
+        }
+    ]
+}

@@ -1,0 +1,25 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "gdb",
+            "request": "attach",
+            "name": "Debug PYNQ-Z2",
+            "gdbpath": "M:/Xilinx/Vitis/2024.2/gnu/aarch32/nt/gcc-arm-none-eabi/bin/arm-none-eabi-gdb.exe",
+            "target": "extended-remote localhost:3000",//3000: ARM; 3001: ARM64; 3002: MicroBlaze; 3003: MicroBlaze64
+            "executable": "./workspace/FlappyBird_InC/Debug/FlappyBird_InC.elf",
+            "cwd": "${workspaceRoot}",
+            "autorun": [
+                "interrupt",
+                "monitor reset halt",
+                "monitor ps",
+                "set confirm off",
+                "file ./workspace/FlappyBird_InC/Debug/FlappyBird_InC.elf",
+                "load"
+            ]
+        }
+    ]
+}
