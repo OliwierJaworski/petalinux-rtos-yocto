@@ -12,6 +12,7 @@ init:
 				 platform active $(plat_name); \
 				 domain active $(domain_name); \
 				 bsp setlib -name lwip220; \
+				 bsp setlib -name xilffs; \
 				 bsp config api_mode SOCKET_API; \
 				 bsp write; \
 				 platform generate; \

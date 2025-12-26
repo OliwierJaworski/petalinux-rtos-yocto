@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ASCII"?>
-<sdkproject:SdkProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdkproject="http://www.xilinx.com/sdkproject" name="FlappyBird_InC" location="M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/FlappyBird_InC" platform="M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/PYNQ_Z2_ETHERNET_HDMI.xpfm" platformUID="xilinx:pynq-z2::0.0(custom)" systemProject="FlappyBird_InC_system" sysConfig="PYNQ_Z2_ETHERNET_HDMI" runtime="C/C++" cpu="freertos_domain" cpuInstance="ps7_cortexa9_0" os="freertos10_xilinx" mssSignature="956a26a5ea6f2b06bafa627af0d911f2">
-  <configuration name="Debug" id="xilinx.gnu.armv7.exe.debug.1589787531" dirty="true">
+<sdkproject:SdkProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdkproject="http://www.xilinx.com/sdkproject" name="FlappyBird_InC" location="M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/FlappyBird_InC" platform="M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/PYNQ_Z2_ETHERNET_HDMI.xpfm" platformUID="xilinx:pynq-z2::0.0(custom)" systemProject="FlappyBird_InC_system" sysConfig="PYNQ_Z2_ETHERNET_HDMI" runtime="C/C++" cpu="freertos_domain" cpuInstance="ps7_cortexa9_0" os="freertos10_xilinx" mssSignature="fd167a9d10f66f7e4b0e4cec7c80c121">
+  <configuration name="Debug" id="xilinx.gnu.armv7.exe.debug.913368010">
     <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
     <lastBuildOptions xsi:type="sdkproject:SdkOptions"/>
   </configuration>
-  <configuration name="Release" id="xilinx.gnu.armv7.exe.release.758575245" dirty="true">
+  <configuration name="Release" id="xilinx.gnu.armv7.exe.release.1237003826" dirty="true">
     <configBuildOptions xsi:type="sdkproject:SdkOptions"/>
   </configuration>
   <template appTemplateName="freertos_lwip_echo_server" hasBspSettings="true"/>

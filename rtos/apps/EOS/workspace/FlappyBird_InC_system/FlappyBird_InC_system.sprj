@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <systemproject:SystemProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:sdsproject="http://www.xilinx.com/sdsproject" xmlns:systemproject="http://www.xilinx.com/systemproject" name="FlappyBird_InC_system" platform="M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/PYNQ_Z2_ETHERNET_HDMI.xpfm" platformUID="xilinx:pynq-z2::0.0(custom)" sysConfig="PYNQ_Z2_ETHERNET_HDMI" runtime="C/C++">
-  <configuration name="Debug" id="com.xilinx.sdx.system.managedbuilder.debugConfiguration.966147540">
+  <configuration name="Debug" id="com.xilinx.sdx.system.managedbuilder.debugConfiguration.1897881635">
     <configBuildOptions xsi:type="systemproject:SystemOptions">
       <applications name="FlappyBird_InC" domainName="freertos_domain" domainPrettyName="freertos_domain" appBuildConfig="Debug"/>
       <options xsi:type="sdsproject:Option" gensdcard="true" dmclkid="0"/>
@@ -10,7 +10,7 @@
       <options xsi:type="sdsproject:Option" gensdcard="true" dmclkid="0"/>
     </lastBuildOptions>
   </configuration>
-  <configuration name="Release" id="com.xilinx.sdx.system.managedbuilder.releaseConfiguration.1557492142">
+  <configuration name="Release" id="com.xilinx.sdx.system.managedbuilder.releaseConfiguration.1781837418">
     <configBuildOptions xsi:type="systemproject:SystemOptions">
       <applications name="FlappyBird_InC" domainName="freertos_domain" domainPrettyName="freertos_domain" appBuildConfig="Release"/>
       <options xsi:type="sdsproject:Option" gensdcard="true" dmclkid="0"/>

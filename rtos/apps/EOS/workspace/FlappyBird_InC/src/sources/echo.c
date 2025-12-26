@@ -48,14 +48,6 @@ int connection_index;
 
 u16_t echo_port = 7;
 
-void print_echo_app_header()
-{
-    xil_printf("%20s %6d %s\r\n", "echo server",
-                        echo_port,
-                        "$ telnet <board_ip> 7");
-
-}
-
 /* thread spawned for each connection */
 void process_echo_request(void *p)
 {
@@ -97,7 +89,7 @@ void echo_application_thread()
 {
 	int sock;
 	int size;
-#if LWIP_IPV6==0
+
 	struct sockaddr_in address, remote;
 
 	memset(&address, 0, sizeof(address));
@@ -106,22 +98,8 @@ void echo_application_thread()
 		return;
 
 	address.sin_family = AF_INET;
-	address.sin_port = htons(echo_port);
+	address.sin_port = htons(echo_port); /* network order MSB first*/
 	address.sin_addr.s_addr = INADDR_ANY;
-#else
-	struct sockaddr_in6 address, remote;
-
-	memset(&address, 0, sizeof(address));
-
-	address.sin6_len = sizeof(address);
-	address.sin6_family = AF_INET6;
-	address.sin6_port = htons(echo_port);
-
-	memset(&(address.sin6_addr), 0, sizeof(address.sin6_addr));
-
-	if ((sock = lwip_socket(AF_INET6, SOCK_STREAM, 0)) < 0)
-		return;
-#endif
 
 	if (lwip_bind(sock, (struct sockaddr *)&address, sizeof (address)) < 0)
 		return;

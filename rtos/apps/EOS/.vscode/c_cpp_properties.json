@@ -5,7 +5,8 @@
       "includePath": [
         "${workspaceFolder}/workspace/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude",
         "${workspaceFolder}/workspace/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/libsrc/lwip220/src/include",
-        "${workspaceFolder}/**"
+        "${workspaceFolder}/**",
+        "${workspace}/src/UGUI/" 
       ],
       "defines": [
         "XPAR_CPU_CORTEXA9"
