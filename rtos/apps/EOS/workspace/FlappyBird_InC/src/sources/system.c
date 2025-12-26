@@ -65,7 +65,7 @@ int main_thread()
 		if (server_netif.ip_addr.addr) {
 			LOG_UART(LOG_DEBUG, LOG_ORIGIN("-- DHCP SUCCESS : IP SETTINGS --"),LOG_printIPsettings,
 						 &(server_netif.ip_addr), &(server_netif.netmask), &(server_netif.gw));
-			sys_thread_new("echod", echo_application_thread, 0,
+			sys_thread_new("Server Thread", Server_thread, 0,
 					THREAD_STACKSIZE,
 					DEFAULT_THREAD_PRIO);
 			break;
@@ -79,20 +79,21 @@ int main_thread()
 			IP4_ADDR(&(server_netif.gw), 192, 168, 1, 1);
 			LOG_UART(LOG_DEBUG, LOG_ORIGIN("-- DHCP ERROR : STATIC IP SETTINGS --"), LOG_printIPsettings,
 					 &(server_netif.ip_addr), &(server_netif.netmask), &(server_netif.gw));
-			sys_thread_new("echod", Server_thread, 0,
+			sys_thread_new("Server Thread", Server_thread, 0,
 						   THREAD_STACKSIZE,
 						   DEFAULT_THREAD_PRIO);
 			break;
 		}
 	}
-		
+
 	vTaskDelete(NULL);
 	return 0;
 }
 
 
-void Server_thread(){
-	memset(&serverHandle, 0, sizoef(serverHandle) );	
+void 
+Server_thread(){
+	memset(&serverHandle, 0, sizeof(serverHandle) );	
 	
 	if ((serverHandle.sock = lwip_socket(AF_INET, SOCK_STREAM, 0)) < 0)	{
 		LOG_UART(LOG_ERROR, LOG_ORIGIN("-- FAILED TO ASSIGN SOCKET FOR SERVER HANDLE --"), NULL);
@@ -111,12 +112,67 @@ void Server_thread(){
 	
 	u16 *chIdx = &serverHandle.connIdx;
 	while(1){
-		if( (serverHandle.ch[*chIdx].sd = lwip_accept(serverHandle.sock, (struct sockaddr *)&serverHandle.remoteSize, (socklen_t*)&serverHandle.remoteSize)) > 0){
-			sys_thread_new(("Client Handler"), );
+		if( (serverHandle.ch[*chIdx].sd = 
+				lwip_accept(serverHandle.sock, 
+					(struct sockaddr *)&serverHandle.remote, (socklen_t*)&serverHandle.remoteSize)) > 0){
+
+			LOG_UART(LOG_TRACE, "-- NEW CLIENT ADDED --", NULL);
+
+			sys_thread_new(("Client Handler"), cRequestHandle_thread,
+				(void*)&(serverHandle.ch[*chIdx].sd),
+				THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+
 			if(++*chIdx >= TCP_MAX_CLIENTS){
 				break;
 			}
 		} 	
 	}
 	LOG_UART(LOG_TRACE, LOG_ORIGIN("-- TCP MAX CLIENTS REACHED --"), NULL);
+	vTaskSuspend(NULL);
+}
+
+void cRequestHandle_thread(void *p)
+{
+    int sd = *(int*)p;
+    char recv_buf[2048];
+    int n;
+
+    /* Read (and ignore) the HTTP request */
+    n = read(sd, recv_buf, sizeof(recv_buf));
+    if (n <= 0) {
+        close(sd);
+        vTaskDelete(NULL);
+    }
+
+    /* Simple HTML page */
+    const char body[] =
+        "<html>"
+        "<head><title>Flappy Controller</title></head>"
+        "<body style=\"background:#111;color:#fff;text-align:center;margin-top:40px;\">"
+        "<h1>Flappy Bird Controller</h1>"
+        "<p>UP / SELECT / DOWN here</p>"
+        "</body>"
+        "</html>";
+
+    char header[256];
+    int body_len = sizeof(body) - 1;   /* exclude terminating '\0' */
+
+    int header_len = snprintf(header, sizeof(header),
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: text/html\r\n"
+        "Content-Length: %d\r\n"
+        "Connection: close\r\n"
+        "\r\n",
+        body_len);
+
+    /* send header */
+    if (header_len > 0)
+        write(sd, header, header_len);
+
+    /* send body */
+    write(sd, body, body_len);
+
+    /* close connection */
+    close(sd);
+    vTaskDelete(NULL);
 }

@@ -14,7 +14,7 @@
 
 #define THREAD_STACKSIZE 1024
 #define HTTP_PORT 80
-#define TCP_MAX_CLIENTS 4
+#define TCP_MAX_CLIENTS 10
 
 struct ClientHandle{
    int sd; 
@@ -30,10 +30,10 @@ struct TCP_ServerHandle_t{
 };
 
 
-
 int main_thread();
 void Game_thread();
 void Server_thread();
+void cRequestHandle_thread(void *p); // thread which handles client requests
 void Game_Session_thread();
 void print_echo_app_header();
 void echo_application_thread(void *);
