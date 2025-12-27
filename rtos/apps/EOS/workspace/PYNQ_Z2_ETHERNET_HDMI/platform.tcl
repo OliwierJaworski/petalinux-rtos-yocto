@@ -28,3 +28,5 @@ bsp write
 bsp reload
 catch {bsp regenerate}
 platform generate -domains freertos_domain 
+platform active {PYNQ_Z2_ETHERNET_HDMI}
+platform generate -domains freertos_domain,zynq_fsbl 

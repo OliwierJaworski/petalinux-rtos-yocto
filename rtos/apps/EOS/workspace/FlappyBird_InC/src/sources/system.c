@@ -6,7 +6,7 @@ volatile int dhcp_timoutcntr;
 static struct netif server_netif;
 struct netif *echo_netif;
 struct TCP_ServerHandle_t serverHandle;
-struct SDhandle SD = {.path = "0:/"};
+struct SDhandle SD = {.path = SD_DEFAULT_VOLUME};
 char indexHtml[4000];
 
 void network_thread(void *p)
@@ -167,8 +167,46 @@ void cRequestHandle_thread(void *p)
     vTaskDelete(NULL);
 }
 
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
+
+// Frame buffer addresses
 void prvSetupHardware(){
+	/* vdma setup */
+	u32 r;
+	VDMA_CONTROL_WRITE(VDMA_CTRL_RESET);
+	do{
+		r =VDMA_CONTROL_READ();
+	}while((r & VDMA_CTRL_RESET));
+
+	VDMA_CONTROL_WRITE(VDMA_CTRL_START);	
+	VDMA_FB1_START_ADDR_WRITE(FRAME_BUFFER_PTR1);	
+	VDMA_FB2_START_ADDR_WRITE(FRAME_BUFFER_PTR2);	
+	VDMA_FB3_START_ADDR_WRITE(FRAME_BUFFER_PTR3);	
+	VDMA_FRAME_DELAY_STRIDE_WRITE();
+	VDMA_FRAME_HSIZE_WRITE(); 
+	VDMA_FRAME_VSIZE_WRITE(); //write vsize last due to possible latch arming
 	
+	r = VDMA_STATUS_READ();
+	if(r & (VDMA_STATUS_ERR | VDMA_STATUS_DECERR | VDMA_STATUS_SLVERR) )
+		LOG_UART(LOG_ERROR, ("VDMA INTERNAL ERROR OCCURED"), NULL);	
+	UINTPTR frame_buffers[3] = {FRAME_BUFFER_PTR1, FRAME_BUFFER_PTR2, FRAME_BUFFER_PTR3};
+
+	/* VDMA DISPLAY TEST */
+	Xil_DCacheDisable(); // Disable cache for direct DDR access
+    for (int fb = 0; fb < 3; fb++) {
+        u8* addr8 = (u8*)frame_buffers[fb];
+        for (int y = 0; y < SCREEN_HEIGHT; y++) {
+            for (int x = 0; x < SCREEN_WIDTH; x++) {
+                addr8[0] = 0xFF;
+                addr8[1] = 0xFF;
+                addr8[2] = 0xFF;
+                addr8 += 3;
+            }
+        }
+    }
+    Xil_DCacheEnable();
+
 	/* READ index.html INTO MEMORY*/
  	SD.r = f_mount(&SD.fs, SD.path, 0); /* mount the root directory */	
 	if(SD.r != FR_OK)

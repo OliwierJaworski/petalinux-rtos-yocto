@@ -10,22 +10,17 @@
 #include "xparameters.h"
 #include "../platform_config.h"
 #include "lwip/sockets.h"
-
 /* SD-CARD*/
 #include "xsdps.h" /*SD device drivers*/
 #include "ff.h"
 #include "xil_cache.h"
-
-/* LOGGING */
+/* LOGGING && CONFIG*/
+#include "sysconf.h"
 #include <utils.h>
+/* VDMA */
+#include "xil_cache.h"
 
-#define THREAD_STACKSIZE 1024
-#define HTTP_PORT 80
-#define TCP_MAX_CLIENTS 10
-#define SD_CONFIG_FILE "config.yaml"
-#define SD_INDEX_HTML "index.html"
-
-// https://elm-chan.org/fsw/ff/
+// fops info -> https://elm-chan.org/fsw/ff/
 struct SDhandle{
     SemaphoreHandle_t xSDsemaphore;
     FATFS fs; /* filesys handle */
@@ -47,8 +42,8 @@ struct TCP_ServerHandle_t{
     s16 remoteSize;
     struct sockaddr_in addr;
     struct sockaddr_in remote;
-    struct ClientHandle ch[TCP_MAX_CLIENTS]; //handle only 4 players
-    u16    connIdx; // amount of connected clients +1 -> next
+    struct ClientHandle ch[TCP_MAX_CLIENTS]; 
+    u16    connIdx; // connected clients +1 
 };
 
 extern char Index_Http[4000];
@@ -63,3 +58,25 @@ void print_echo_app_header();
 void echo_application_thread(void *);
 void lwip_init();
 
+#define VDMA_CONTROL_READ() Xil_In32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_CTRL_REG);
+/* MM2S VDMA CONTROL REGISTER */
+#define VDMA_CONTROL_WRITE(cmd) Xil_Out32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_CTRL_REG, (cmd))
+
+/* MM2S VDMA STATUS REGISTER */
+#define VDMA_STATUS_READ() Xil_In32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_STATUS_REG)
+
+/* MM2S VDMA BUFFER REGISTER POINTERS */
+#define VDMA_FB1_START_ADDR_WRITE(Bptr) Xil_Out32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_FB1_REG, (Bptr))
+
+#define VDMA_FB2_START_ADDR_WRITE(Bptr) Xil_Out32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_FB2_REG, (Bptr))
+
+#define VDMA_FB3_START_ADDR_WRITE(Bptr) Xil_Out32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_FB3_REG, (Bptr))
+
+/* MM2S VDMA FRAME AND STRIDE REGISTER */
+#define VDMA_FRAME_DELAY_STRIDE_WRITE() Xil_Out32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_FRAME_STRIDE_REG, (HDMI_HSIZE * HDMI_RGB))
+
+/* MM2S VDMA VERTICAL SIZE */
+#define VDMA_FRAME_VSIZE_WRITE() Xil_Out32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_VSIZE_REG, HDMI_VSIZE)
+
+/* MM2S VDMA HORIZONTAL SIZE */
+#define VDMA_FRAME_HSIZE_WRITE() Xil_Out32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_HSIZE_REG, (HDMI_HSIZE * HDMI_RGB))

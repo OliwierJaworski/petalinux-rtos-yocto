@@ -11,11 +11,11 @@
 /* for semaphores and TICK timer defines */
 #include "FreeRTOS.h"
 #include "semphr.h"
+#include "sysconf.h"
 
 #define LOG_ERROR  1 /*( application output | error )*/
 #define LOG_TRACE  2 /*( application output | error | status updates)*/
 #define LOG_DEBUG  3 /*( application output | error | status updates | verbose)*/
-#define VERBOSITY 3
 
 #define CLR_RED     "\033[31m"
 #define CLR_GREEN   "\033[32m"
