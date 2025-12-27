@@ -19,6 +19,7 @@
 #include <utils.h>
 /* VDMA */
 #include "xil_cache.h"
+#include "../UGUI/ugui.h"
 
 // fops info -> https://elm-chan.org/fsw/ff/
 struct SDhandle{
@@ -50,7 +51,7 @@ extern char Index_Http[4000];
 
 void prvSetupHardware();
 int main_thread();
-void Game_thread();
+void Game_thread(void *pvParams);
 void Server_thread();
 void cRequestHandle_thread(void *p); // thread which handles client requests
 void Game_Session_thread();

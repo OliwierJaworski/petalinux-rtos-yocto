@@ -1,6 +1,7 @@
 #ifndef _SYS_CONFIG_H_
 #define _SYS_CONFIG_H_
 
+#define GAME_TASK_PRIORITY      3
 #define THREAD_STACKSIZE        1024
 #define HTTP_PORT               80
 #define TCP_MAX_CLIENTS         10

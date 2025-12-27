@@ -5,9 +5,6 @@ int main()
 	LOG_UART(LOG_TRACE, "-- BEGIN MAIN--", NULL);
 
 	prvSetupHardware();
-	while(1){
-		
-	}
 	sys_thread_new("main_thrd", (void (*)(void *))main_thread, 0,
 				   THREAD_STACKSIZE,
 				   DEFAULT_THREAD_PRIO);
