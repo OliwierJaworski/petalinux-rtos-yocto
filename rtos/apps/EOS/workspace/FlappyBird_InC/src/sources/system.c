@@ -6,6 +6,8 @@ volatile int dhcp_timoutcntr;
 static struct netif server_netif;
 struct netif *echo_netif;
 struct TCP_ServerHandle_t serverHandle;
+struct SDhandle SD = {.path = "0:/"};
+char indexHtml[4000];
 
 void network_thread(void *p)
 {
@@ -143,20 +145,8 @@ void cRequestHandle_thread(void *p)
         close(sd);
         vTaskDelete(NULL);
     }
-
-    /* Simple HTML page */
-    const char body[] =
-        "<html>"
-        "<head><title>Flappy Controller</title></head>"
-        "<body style=\"background:#111;color:#fff;text-align:center;margin-top:40px;\">"
-        "<h1>Flappy Bird Controller</h1>"
-        "<p>UP / SELECT / DOWN here</p>"
-        "</body>"
-        "</html>";
-
-    char header[256];
-    int body_len = sizeof(body) - 1;   /* exclude terminating '\0' */
-
+	int body_len = sizeof(indexHtml)-1; 
+	char header[256];
     int header_len = snprintf(header, sizeof(header),
         "HTTP/1.1 200 OK\r\n"
         "Content-Type: text/html\r\n"
@@ -170,9 +160,30 @@ void cRequestHandle_thread(void *p)
         write(sd, header, header_len);
 
     /* send body */
-    write(sd, body, body_len);
+    write(sd, indexHtml, body_len);
 
     /* close connection */
     close(sd);
     vTaskDelete(NULL);
+}
+
+void prvSetupHardware(){
+	
+	/* READ index.html INTO MEMORY*/
+ 	SD.r = f_mount(&SD.fs, SD.path, 0); /* mount the root directory */	
+	if(SD.r != FR_OK)
+		LOG_UART(LOG_ERROR, LOG_ORIGIN("SD MOUNT FAILED"), NULL);
+
+	SD.fname = SD_INDEX_HTML; 
+	SD.r = f_open(&SD.fp, SD.fname, FA_READ);
+	if(SD.r != FR_OK)
+		LOG_UART(LOG_ERROR, LOG_ORIGIN("SD FAILED TO OPEN FILE"), NULL);
+	do{
+		SD.r = f_read(&SD.fp, (void*)&indexHtml[SD.bRead], f_size(&SD.fp), &SD.bRead);
+	}while(SD.bRead < f_size(&SD.fp));
+	indexHtml[SD.bRead] = '\0';
+	if (SD.r != FR_OK)
+		LOG_UART(LOG_ERROR, LOG_ORIGIN("SD FAILED TO READ FROM FILE"), NULL);
+	
+	printf("%s", indexHtml);	
 }

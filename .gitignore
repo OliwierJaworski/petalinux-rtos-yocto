@@ -16,3 +16,12 @@ platforms/device_tree_tinkering/
 platforms/pynq_vdma_game/.petalinux/metadata
 
 platforms/pynq_vdma_game/project-spec/configs/.statistics
+rtos/apps/EOS/workspace/.metadata
+rtos/apps/EOS/.Xil
+platform-build-files/HDMI-VDMA
+rtos/apps/EOS/workspace/.analytics
+rtos/apps/EOS/workspace/IDE.log
+rtos/apps/EOS/workspace/IDE.log
+rtos/apps/EOS/workspace/RemoteSystemsTempFiles
+rtos/apps/EOS/dbg_init_A9_0.tcl
+rtos/apps/EOS/workspace/FlappyBird_InC/Debug

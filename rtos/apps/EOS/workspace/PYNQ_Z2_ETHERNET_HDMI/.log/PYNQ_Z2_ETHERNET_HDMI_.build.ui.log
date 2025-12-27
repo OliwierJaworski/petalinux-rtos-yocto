@@ -1,4 +1,4 @@
-2025-12-26T11:42:23.882494900255-11:42:23 **** Incremental Build of project PYNQ_Z2_ETHERNET_HDMI ****
+2025-12-27T00:21:31.818338400255-00:21:31 **** Incremental Build of project PYNQ_Z2_ETHERNET_HDMI ****
 000-buildplatform.bat 64219 PYNQ_Z2_ETHERNET_HDMI freertos_domain 
 000-
 000-****** Software Commandline Tool (XSCT) v2024.2.0
@@ -11,7 +11,7 @@
 000-We recommend using the new Python command-line tool for project management and debugging:
 000-- Run "vitis -i" for interactive mode.
 000-- Run "vitis -s <script>" for script mode.
-000-XSDB Server Channel: tcfchan#9
+000-XSDB Server Channel: tcfchan#10
 000-Building the BSP Library for domain  - freertos_domain on processor ps7_cortexa9_0
 000-make --no-print-directory seq_libs
 000-
@@ -283,8 +283,6 @@
 000-CHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostartf
 000-iles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 000-
-000-"Running Make libs in ps7_cortexa9_0/libsrc/devcfg_v3_8/src"
-000-
 000/PYNQ_Z2_ETHERNET_HDMI58-1-1missing initializer for field 'IntrId' of 'XAxiVdma_Config' [-Wmissing-field-initializers]1-xaxivdma_g.c:58:9: warning: missing initializer for field 'IntrId' of 'XAxiVdma_Config' [-Wmissing-field-initializers]
 000-   58 |         }
 000-      |         ^
@@ -292,6 +290,8 @@
 000/PYNQ_Z2_ETHERNET_HDMI453-1-1'IntrId' declared here0-xaxivdma.h:453:13: note: 'IntrId' declared here
 000-  453 |         u16 IntrId[2]; /** Bits[11:0] Interrupt-id Bits[15:12] trigger type and level flags */
 000-      |             ^~~~~~
+000-"Running Make libs in ps7_cortexa9_0/libsrc/devcfg_v3_8/src"
+000-
 000-make -C ps7_cortexa9_0/libsrc/devcfg_v3_8/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "A
 000-RCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostart
 000-files -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
@@ -417,5 +417,5 @@
 000-'Finished building libraries'
 000-
 00255-
-11:42:41 Build Finished (took 17s.242ms)
+00:21:51 Build Finished (took 19s.653ms)
 

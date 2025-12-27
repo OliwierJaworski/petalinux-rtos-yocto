@@ -23,3 +23,8 @@ bsp write
 bsp reload
 catch {bsp regenerate}
 platform generate -domains freertos_domain 
+bsp config use_lfn "3"
+bsp write
+bsp reload
+catch {bsp regenerate}
+platform generate -domains freertos_domain 
