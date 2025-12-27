@@ -1,67 +1,0 @@
-2025-12-26T02:34:14.439862700255-02:34:14 **** Incremental Build of configuration Debug for project FlappyBird_InC ****
-000-make all 
-000-make --no-print-directory pre-build
-000-a9-linaro-pre-build-step
-000-' '
-000-make --no-print-directory main-build
-000-'Building file: ../src/sources/echo.c'
-000-'Invoking: ARM v7 gcc compiler'
-000-arm-none-eabi-gcc -DLWIP_DHCP=1 -Wall -O0 -g3 -IM:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include -I"M:\Github\petalinux-rtos-yocto\rtos\apps\EOS\workspace\FlappyBird_InC\src\include" -c -fmessage-length=0 -MT"src/sources/echo.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -MMD -MP -MF"src/sources/echo.d" -MT"src/sources/echo.o" -o "src/sources/echo.o" "../src/sources/echo.c"
-000-In file included from M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwip/opt.h:51,
-000-                 from M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwip/sockets.h:42,
-000-                 from ../src/sources/echo.c:32:
-000/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwipopts.h121-1-1"LWIP_DHCP" redefined1-M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwipopts.h:121: warning: "LWIP_DHCP" redefined
-000-  121 | #define LWIP_DHCP 0
-000-      | 
-000-<command-line>: note: this is the location of the previous definition
-000-'Finished building: ../src/sources/echo.c'
-000-' '
-000-'Building file: ../src/sources/system.c'
-000-'Invoking: ARM v7 gcc compiler'
-000-arm-none-eabi-gcc -DLWIP_DHCP=1 -Wall -O0 -g3 -IM:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include -I"M:\Github\petalinux-rtos-yocto\rtos\apps\EOS\workspace\FlappyBird_InC\src\include" -c -fmessage-length=0 -MT"src/sources/system.o" -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -MMD -MP -MF"src/sources/system.d" -MT"src/sources/system.o" -o "src/sources/system.o" "../src/sources/system.c"
-000-In file included from M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwip/opt.h:51,
-000-                 from M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwip/dhcp.h:41,
-000-                 from M:\Github\petalinux-rtos-yocto\rtos\apps\EOS\workspace\FlappyBird_InC\src\include/system.h:8,
-000-                 from ../src/sources/system.c:1:
-000/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwipopts.h121-1-1"LWIP_DHCP" redefined1-M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwipopts.h:121: warning: "LWIP_DHCP" redefined
-000-  121 | #define LWIP_DHCP 0
-000-      | 
-000-<command-line>: note: this is the location of the previous definition
-000/FlappyBird_InC/src/include/system.h16-1-1"DEFAULT_THREAD_PRIO" redefined1-M:\Github\petalinux-rtos-yocto\rtos\apps\EOS\workspace\FlappyBird_InC\src\include/system.h:16: warning: "DEFAULT_THREAD_PRIO" redefined
-000-   16 | #define DEFAULT_THREAD_PRIO 1 /* 0 is for IDLE task-> cleanup etc...*/
-000-      | 
-000/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwipopts.h46-1-1this is the location of the previous definition0-M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwipopts.h:46: note: this is the location of the previous definition
-000-   46 | #define DEFAULT_THREAD_PRIO 2
-000-      | 
-000/FlappyBird_InC/src/include/system.h17-1-1"LWIP_DHCP" redefined1-M:\Github\petalinux-rtos-yocto\rtos\apps\EOS\workspace\FlappyBird_InC\src\include/system.h:17: warning: "LWIP_DHCP" redefined
-000-   17 | #define LWIP_DHCP 1
-000-      | 
-000/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwipopts.h121-1-1this is the location of the previous definition0-M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/export/PYNQ_Z2_ETHERNET_HDMI/sw/PYNQ_Z2_ETHERNET_HDMI/freertos_domain/bspinclude/include/lwipopts.h:121: note: this is the location of the previous definition
-000-  121 | #define LWIP_DHCP 0
-000-      | 
-000-../src/sources/system.c: In function 'network_thread':
-000/FlappyBird_InC/src/sources/system.c70-1-1'DHCP_FINE_TIMER_MSECS' undeclared (first use in this function)2DHCP_FINE_TIMER_MSECS../src/sources/system.c:70:28: error: 'DHCP_FINE_TIMER_MSECS' undeclared (first use in this function)
-000-   70 |                 vTaskDelay(DHCP_FINE_TIMER_MSECS / portTICK_RATE_MS);
-000-      |                            ^~~~~~~~~~~~~~~~~~~~~
-000/FlappyBird_InC/src/sources/system.c70-1-1each undeclared identifier is reported only once for each function it appears in0-../src/sources/system.c:70:28: note: each undeclared identifier is reported only once for each function it appears in
-000/FlappyBird_InC/src/sources/system.c71-1-1implicit declaration of function 'dhcp_fine_tmr' [-Wimplicit-function-declaration]1-../src/sources/system.c:71:17: warning: implicit declaration of function 'dhcp_fine_tmr' [-Wimplicit-function-declaration]
-000-   71 |                 dhcp_fine_tmr();
-000-      |                 ^~~~~~~~~~~~~
-000/FlappyBird_InC/src/sources/system.c73-1-1'DHCP_COARSE_TIMER_SECS' undeclared (first use in this function)2DHCP_COARSE_TIMER_SECS../src/sources/system.c:73:30: error: 'DHCP_COARSE_TIMER_SECS' undeclared (first use in this function)
-000-   73 |                 if (mscnt >= DHCP_COARSE_TIMER_SECS*1000) {
-000-      |                              ^~~~~~~~~~~~~~~~~~~~~~
-000/FlappyBird_InC/src/sources/system.c74-1-1implicit declaration of function 'dhcp_coarse_tmr' [-Wimplicit-function-declaration]1-../src/sources/system.c:74:25: warning: implicit declaration of function 'dhcp_coarse_tmr' [-Wimplicit-function-declaration]
-000-   74 |                         dhcp_coarse_tmr();
-000-      |                         ^~~~~~~~~~~~~~~
-000-../src/sources/system.c: In function 'main_thread':
-000/FlappyBird_InC/src/sources/system.c92-1-1'DHCP_FINE_TIMER_MSECS' undeclared (first use in this function)2DHCP_FINE_TIMER_MSECS../src/sources/system.c:92:20: error: 'DHCP_FINE_TIMER_MSECS' undeclared (first use in this function)
-000-   92 |         vTaskDelay(DHCP_FINE_TIMER_MSECS / portTICK_RATE_MS);
-000-      |                    ^~~~~~~~~~~~~~~~~~~~~
-000/FlappyBird_InC/src/sources/system.c105-1-1'DHCP_COARSE_TIMER_SECS' undeclared (first use in this function)2DHCP_COARSE_TIMER_SECS../src/sources/system.c:105:30: error: 'DHCP_COARSE_TIMER_SECS' undeclared (first use in this function)
-000-  105 |                 if (mscnt >= DHCP_COARSE_TIMER_SECS * 2000) {
-000-      |                              ^~~~~~~~~~~~~~~~~~~~~~
-000/FlappyBird_InC0-1-1make[1]: *** [src/sources/subdir.mk:26: src/sources/system.o] Error 12-make[1]: *** [src/sources/subdir.mk:26: src/sources/system.o] Error 1
-000/FlappyBird_InC0-1-1make: *** [makefile:36: all] Error 22-make: *** [makefile:36: all] Error 2
-00255-
-02:34:15 Build Finished (took 686ms)
-
