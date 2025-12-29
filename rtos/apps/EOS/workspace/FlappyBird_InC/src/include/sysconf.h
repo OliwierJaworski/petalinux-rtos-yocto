@@ -19,6 +19,11 @@
 #define HDMI_VSIZE      1080
 #define HDMI_RGB        3
 
+#define OFFST_R 16
+#define OFFST_G 0
+#define OFFST_B 8
+#define uCHAR_MAX 0xFF
+
 #define FRAME_BUFFER_PTR1 0x10000000
 #define FRAME_BUFFER_PTR2 0x118C0000
 #define FRAME_BUFFER_PTR3 0x13180000

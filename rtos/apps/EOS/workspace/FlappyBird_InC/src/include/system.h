@@ -1,7 +1,6 @@
 
 #ifndef _SYSTEM_H_
 #define _SYSTEM_H_
-#endif
 
 /* TCP */
 #include "lwip/dhcp.h"
@@ -10,6 +9,8 @@
 #include "xparameters.h"
 #include "../platform_config.h"
 #include "lwip/sockets.h"
+#include "lwip/tcpip.h"
+
 /* SD-CARD*/
 #include "xsdps.h" /*SD device drivers*/
 #include "ff.h"
@@ -47,6 +48,36 @@ struct TCP_ServerHandle_t{
     u16    connIdx; // connected clients +1 
 };
 
+static enum HTTP_METHOD{
+    REQ_GET,
+    REQ_POST,
+    REQ_PUT,
+    REQ_UNKNOWN
+};
+
+struct HttpQuery{
+    char key[50]; 
+    char value[100];
+    struct HttpQuery *next;
+    struct HttpHeader *prev;
+};
+
+struct HttpHeader{
+    enum HTTP_METHOD ReqType;
+    char ReqDir [100]; // /, /logs, etc...
+    char ReqHost [100]; // 102.168...
+    char ReqStatus[50]; // keep-alive ,close, ...
+    char ReqData [10240]; // max 10kb of data
+    size_t datasize;
+};
+
+struct HttpRequest_t{
+    struct HttpHeader header;
+    struct HttpQuery queries;
+    size_t QueryAmount;
+    char data[10240];
+};
+
 extern char Index_Http[4000];
 
 void prvSetupHardware();
@@ -57,7 +88,9 @@ void cRequestHandle_thread(void *p); // thread which handles client requests
 void Game_Session_thread();
 void print_echo_app_header();
 void echo_application_thread(void *);
-void lwip_init();
+
+/* HTTP requests */
+void ProcessRequest(const char* HttpReq, struct HttpRequest_t *r);
 
 #define VDMA_CONTROL_READ() Xil_In32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_CTRL_REG);
 /* MM2S VDMA CONTROL REGISTER */
@@ -81,3 +114,5 @@ void lwip_init();
 
 /* MM2S VDMA HORIZONTAL SIZE */
 #define VDMA_FRAME_HSIZE_WRITE() Xil_Out32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_HSIZE_REG, (HDMI_HSIZE * HDMI_RGB))
+
+#endif

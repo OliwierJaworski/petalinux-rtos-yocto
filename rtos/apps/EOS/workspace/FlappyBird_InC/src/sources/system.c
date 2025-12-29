@@ -1,6 +1,10 @@
 #include "system.h"
 
-/* DHCP && socket ADAPTER SETUP*/
+/* variables for testing purposes which 
+   will be moved later into designated 
+   storage solutions
+*/
+/* -------------------------- */
 err_t dhcp_start(struct netif *netif);
 volatile int dhcp_timoutcntr;
 static struct netif server_netif;
@@ -12,7 +16,15 @@ BaseType_t xReturned;
 char indexHtml[4000];
 UINTPTR frame_buffers[3] = {FRAME_BUFFER_PTR1, FRAME_BUFFER_PTR2, FRAME_BUFFER_PTR3};
 
-void network_thread(void *p)
+UG_WINDOW MainCtx;
+UG_BMP FbirdSprite;
+UG_GUI PYNQ_GUI;
+TickType_t xLastwake;
+const TickType_t xFrequency = pdMS_TO_TICKS(1000);
+/* -------------------------- */
+
+void 
+network_thread(void *p)
 {
     struct netif *netif;
     /* the mac address of the board. this should be unique per board */
@@ -55,7 +67,62 @@ void network_thread(void *p)
     return;
 }
 
-int main_thread()
+void 
+prvSetupHardware(){
+	/* vdma setup */
+	u32 r;
+	VDMA_CONTROL_WRITE(VDMA_CTRL_RESET);
+	do{
+		r =VDMA_CONTROL_READ();
+	}while((r & VDMA_CTRL_RESET));
+
+	VDMA_CONTROL_WRITE(VDMA_CTRL_START);	
+	VDMA_FB1_START_ADDR_WRITE(FRAME_BUFFER_PTR1);	
+	VDMA_FB2_START_ADDR_WRITE(FRAME_BUFFER_PTR1);	
+	VDMA_FB3_START_ADDR_WRITE(FRAME_BUFFER_PTR1);	
+	VDMA_FRAME_DELAY_STRIDE_WRITE();
+	VDMA_FRAME_HSIZE_WRITE(); 
+	VDMA_FRAME_VSIZE_WRITE(); //write vsize last due to possible latch arming
+	
+	r = VDMA_STATUS_READ();
+	if(r & (VDMA_STATUS_ERR | VDMA_STATUS_DECERR | VDMA_STATUS_SLVERR) )
+		LOG_UART(LOG_ERROR, ("VDMA INTERNAL ERROR OCCURED"), NULL);	
+
+	/* VDMA DISPLAY TEST */
+	Xil_DCacheDisable(); // Disable cache for direct DDR access
+    for (int fb = 0; fb < 3; fb++) {
+        u8* addr8 = (u8*)frame_buffers[fb];
+        for (int y = 0; y < HDMI_VSIZE; y++) {
+            for (int x = 0; x < HDMI_HSIZE; x++) {
+                addr8[0] = 0xFF;
+                addr8[1] = 0xFF;
+                addr8[2] = 0xFF;
+                addr8 += 3;
+            }
+        }
+    }
+    Xil_DCacheEnable();
+
+	/* READ index.html INTO MEMORY*/
+ 	SD.r = f_mount(&SD.fs, SD.path, 0); /* mount the root directory */	
+	if(SD.r != FR_OK)
+		LOG_UART(LOG_ERROR, LOG_ORIGIN("SD MOUNT FAILED"), NULL);
+
+	SD.fname = SD_INDEX_HTML; 
+	SD.r = f_open(&SD.fp, SD.fname, FA_READ);
+	if(SD.r != FR_OK)
+		LOG_UART(LOG_ERROR, LOG_ORIGIN("SD FAILED TO OPEN FILE"), NULL);
+	do{
+		SD.r = f_read(&SD.fp, (void*)&indexHtml[SD.bRead], f_size(&SD.fp), &SD.bRead);
+	}while(SD.bRead < f_size(&SD.fp));
+	indexHtml[SD.bRead] = '\0';
+	if (SD.r != FR_OK)
+		LOG_UART(LOG_ERROR, LOG_ORIGIN("SD FAILED TO READ FROM FILE"), NULL);
+	f_unmount(SD.path);	
+}
+
+int 
+main_thread()
 {
     int mscnt = 0;
 
@@ -64,11 +131,6 @@ int main_thread()
 	/* any thread using lwIP should be created using sys_thread_new */
     sys_thread_new("NW_THRD", network_thread, NULL, THREAD_STACKSIZE,
                     DEFAULT_THREAD_PRIO);  
-
-	xReturned = xTaskCreate(Game_thread,"Game_Thread", THREAD_STACKSIZE, NULL, 
-					DEFAULT_THREAD_PRIO, &xGameHandle);
-	if(xReturned != pdPASS)
-		LOG_UART(LOG_ERROR,LOG_ORIGIN("TASK CREATION FAILED"), NULL);
 
     while (1) {
 	vTaskDelay(DHCP_FINE_TIMER_MSECS / portTICK_RATE_MS);/* wait 5 ticks */
@@ -95,85 +157,17 @@ int main_thread()
 			break;
 		}
 	}
-
+	/* Thread responsible for the gameplay it calculates the positions, writes pixels, 
+	   and processes user input
+	*/
+	xReturned = xTaskCreate(Game_thread,"Game_Thread", THREAD_STACKSIZE, NULL, 
+					DEFAULT_THREAD_PRIO, &xGameHandle);
+	if(xReturned != pdPASS)
+		LOG_UART(LOG_ERROR,LOG_ORIGIN("TASK CREATION FAILED"), NULL);
 	vTaskDelete(NULL);
 	return 0;
 }
 
-UG_WINDOW MainCtx;
-UG_BMP FbirdSprite;
-UG_GUI PYNQ_GUI;
-static void vdmaPxlSet(UG_S16 x, UG_S16 y, UG_COLOR c){
-	/* Vdma uses RGB888-type pixel data, This function calculates current pixel offset
-	   fragments the u32 value using ptr arithmetic into u8* indexes; r,g,b,(a not used here),
-	   and assigns the matching values by shifting the u32 by color offset.
-	*/
-	u32 offset = ((y * HDMI_HSIZE + x) * HDMI_RGB); //calculate pixel offset	
-	u8* fb = (u8*)frame_buffers[0];
-
-	fb[offset + 0] = (c >> 8) & 0xFF; 	//B
-	fb[offset + 1] = (c >> 0) & 0xFF;	//G
-	fb[offset + 2] = (c >> 16) & 0xFF; 	//R
-	
-	/* increment framebuffer so the next frame is written to the next
-	   in a circular pattern
-	*/
-/*	if(offset == ( (HDMI_HSIZE*HDMI_VSIZE-3)* HDMI_RGB)){
-		if(++fb_idx == 3)
-			fb_idx =0;
-	}*/	
-}
-
-TickType_t xLastwake;
-const TickType_t xFrequency = pdMS_TO_TICKS(1000);
-
-void 
-Game_thread(void *pvParams){
-	UG_Init(&PYNQ_GUI, vdmaPxlSet, HDMI_HSIZE, HDMI_VSIZE);
-
-	SD.r = f_mount(&SD.fs,SD.path,0);
-	if(SD.r != FR_OK)
-		LOG_UART(LOG_ERROR, LOG_ORIGIN("SD MOUNT FAILED"), NULL);
-
-	f_unmount(SD.path);
-
-	Xil_DCacheDisable();
-    UG_FillScreen(C_BEIGE);
-    Xil_DCacheEnable();
-
-    /* square properties */
-    const int sz = 80;
-    int x = (HDMI_HSIZE/2) - (sz/2);
-    int y = (HDMI_VSIZE/2) - (sz/2);
-    int vx = 6;
-    int vy = 6;
-
-    TickType_t xLastWake = xTaskGetTickCount();
-    const TickType_t period = pdMS_TO_TICKS(100);   /* ~60 FPS */
-
-    while (1)
-    {
-        xTaskDelayUntil(&xLastWake, period);
-
-        /* erase previous square */
-        Xil_DCacheDisable();
-        UG_FillFrame(x, y, x+sz, y+sz, C_BEIGE);
-
-        /* update position */
-        x += vx;
-        y += vy;
-
-        if (x <= 0 || x + sz >= HDMI_HSIZE)
-            vx = -vx;
-
-        if (y <= 0 || y + sz >= HDMI_VSIZE)
-            vy = -vy;
-
-        /* draw new square */
-        UG_FillFrame(x, y, x+sz, y+sz, C_BLACK);
-        Xil_DCacheEnable();
-    }
-}
 
 void 
 Server_thread(){
@@ -214,18 +208,56 @@ Server_thread(){
 	vTaskSuspend(NULL);
 }
 
-void cRequestHandle_thread(void *p)
+enum TCPthread_states{
+	CONNECTED, // new connection initialize 
+	RECEIVING,
+	PROCESSING,
+	SENDING,
+}; 
+enum TCPthread_states sdState;
+
+
+/*	TODO:
+	- Read + parse queued socket requests.
+	- process inside game thread -> user queue implementation.
+
+*/
+void 
+cRequestHandle_thread(void *p)
 {
     int sd = *(int*)p;
     char recv_buf[2048];
     int n;
 
-    /* Read (and ignore) the HTTP request */
-    n = read(sd, recv_buf, sizeof(recv_buf));
-    if (n <= 0) {
+    struct HttpRequest_t *req;  
+	
+	// check whether the connected socket request is valid
+	n = read(sd, recv_buf, sizeof(recv_buf));
+	if (n <= 0) {
         close(sd);
         vTaskDelete(NULL);
     }
+	// create a request structure
+	req = pvPortCalloc(1, sizeof(struct HttpRequest_t));
+	if(req == NULL)
+		LOG_UART(LOG_ERROR, "COULD NOT ALLOCATE HttpRequest_t SIZE", NULL);
+
+	sdState = PROCESSING;
+
+	while(1){
+		switch(sdState){
+		case CONNECTED :
+		case RECEIVING:
+			//recv(sd, recv_buf, sizeof(recv_buf), 0);
+		case PROCESSING:
+			ProcessRequest(recv_buf, req);
+			sdState = RECEIVING;
+		case SENDING:
+		default:
+	}
+};
+	
+
 	int body_len = sizeof(indexHtml)-1; 
 	char header[256];
     int header_len = snprintf(header, sizeof(header),
@@ -248,59 +280,65 @@ void cRequestHandle_thread(void *p)
     vTaskDelete(NULL);
 }
 
-#define SCREEN_WIDTH 1920
-#define SCREEN_HEIGHT 1080
+static void 
+vdmaPxlSet_CB(UG_S16 x, UG_S16 y, UG_COLOR c){
+	/* Vdma uses GBR888-(msb last)type pixel data, This function calculates current pixel offset
+	   fragments the u32 value using ptr arithmetic into u8* indexes; r,g,b,(a not used here),
+	   and assigns the matching values by shifting the u32 by color offset.
+	*/
+	u32 offset = ((y * HDMI_HSIZE + x) * HDMI_RGB); //calculate pixel offset	
+	u8* fb = (u8*)frame_buffers[0];
 
-// Frame buffer addresses
-void prvSetupHardware(){
-	/* vdma setup */
-	u32 r;
-	VDMA_CONTROL_WRITE(VDMA_CTRL_RESET);
-	do{
-		r =VDMA_CONTROL_READ();
-	}while((r & VDMA_CTRL_RESET));
+	fb[offset + 0] = (c >> OFFST_B) & uCHAR_MAX; 	//B
+	fb[offset + 1] = (c >> OFFST_G) & uCHAR_MAX;	//G
+	fb[offset + 2] = (c >> OFFST_R) & uCHAR_MAX; 	//R
+}
 
-	VDMA_CONTROL_WRITE(VDMA_CTRL_START);	
-	VDMA_FB1_START_ADDR_WRITE(FRAME_BUFFER_PTR1);	
-	VDMA_FB2_START_ADDR_WRITE(FRAME_BUFFER_PTR1);	
-	VDMA_FB3_START_ADDR_WRITE(FRAME_BUFFER_PTR1);	
-	VDMA_FRAME_DELAY_STRIDE_WRITE();
-	VDMA_FRAME_HSIZE_WRITE(); 
-	VDMA_FRAME_VSIZE_WRITE(); //write vsize last due to possible latch arming
-	
-	r = VDMA_STATUS_READ();
-	if(r & (VDMA_STATUS_ERR | VDMA_STATUS_DECERR | VDMA_STATUS_SLVERR) )
-		LOG_UART(LOG_ERROR, ("VDMA INTERNAL ERROR OCCURED"), NULL);	
+void 
+Game_thread(void *pvParams){
+	UG_Init(&PYNQ_GUI, vdmaPxlSet_CB, HDMI_HSIZE, HDMI_VSIZE);
 
-	/* VDMA DISPLAY TEST */
-	Xil_DCacheDisable(); // Disable cache for direct DDR access
-    for (int fb = 0; fb < 3; fb++) {
-        u8* addr8 = (u8*)frame_buffers[fb];
-        for (int y = 0; y < SCREEN_HEIGHT; y++) {
-            for (int x = 0; x < SCREEN_WIDTH; x++) {
-                addr8[0] = 0xFF;
-                addr8[1] = 0xFF;
-                addr8[2] = 0xFF;
-                addr8 += 3;
-            }
-        }
-    }
-    Xil_DCacheEnable();
-
-	/* READ index.html INTO MEMORY*/
- 	SD.r = f_mount(&SD.fs, SD.path, 0); /* mount the root directory */	
+	SD.r = f_mount(&SD.fs,SD.path,0);
 	if(SD.r != FR_OK)
 		LOG_UART(LOG_ERROR, LOG_ORIGIN("SD MOUNT FAILED"), NULL);
 
-	SD.fname = SD_INDEX_HTML; 
-	SD.r = f_open(&SD.fp, SD.fname, FA_READ);
-	if(SD.r != FR_OK)
-		LOG_UART(LOG_ERROR, LOG_ORIGIN("SD FAILED TO OPEN FILE"), NULL);
-	do{
-		SD.r = f_read(&SD.fp, (void*)&indexHtml[SD.bRead], f_size(&SD.fp), &SD.bRead);
-	}while(SD.bRead < f_size(&SD.fp));
-	indexHtml[SD.bRead] = '\0';
-	if (SD.r != FR_OK)
-		LOG_UART(LOG_ERROR, LOG_ORIGIN("SD FAILED TO READ FROM FILE"), NULL);
-	f_unmount(SD.path);	
+	f_unmount(SD.path);
+
+	Xil_DCacheDisable();
+    UG_FillScreen(C_BEIGE);
+    Xil_DCacheEnable();
+
+    /* square properties */
+    const int sz = 80;
+    int x = (HDMI_HSIZE/2) - (sz/2);
+    int y = (HDMI_VSIZE/2) - (sz/2);
+    int vx = 6;
+    int vy = 6;
+
+    TickType_t xLastWake = xTaskGetTickCount();
+    const TickType_t period = pdMS_TO_TICKS(100);   
+
+    while (1)
+    {
+        xTaskDelayUntil(&xLastWake, period);
+
+        /* erase previous square */
+        Xil_DCacheDisable();
+        UG_FillFrame(x, y, x+sz, y+sz, C_BEIGE);
+
+        /* update position */
+        x += vx;
+        y += vy;
+
+        if (x <= 0 || x + sz >= HDMI_HSIZE)
+            vx = -vx;
+
+        if (y <= 0 || y + sz >= HDMI_VSIZE)
+            vy = -vy;
+
+        /* draw new square */
+        UG_FillFrame(x, y, x+sz, y+sz, C_BLACK);
+        Xil_DCacheEnable();
+    }
 }
+
