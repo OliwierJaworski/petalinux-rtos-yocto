@@ -54,13 +54,14 @@ ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
 
         strncpy(buffer, HttpReq, (pOP-pC));   
                                                    
+        //Get does not function properly so no time to fix the rest only get requests for now
         LOG_UART(LOG_TRACE, buffer, NULL);
         if (strcmp(buffer,"GET")==0)  
             r->header.ReqType = REQ_GET;
-        else if (strcmp(buffer,"POST")==0) 
+        /*else if (strcmp(buffer,"POST")==0) 
             r->header.ReqType = REQ_POST;
         else if (strcmp(buffer,"PUT")==0)
-            r->header.ReqType = REQ_PUT;
+            r->header.ReqType = REQ_PUT;*/
         else 
             r->header.ReqType = REQ_UNKNOWN;
          
@@ -126,6 +127,14 @@ ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
                         "text/html",body_len, "Keep-Alive", body);
                     return SENDING; 
                 }
+                
+               r->rSize = snprintf(r->response, sizeof(r->response),
+                    "HTTP/1.1 404 Not Found\r\n"
+                    "Content-Length: 0\r\n"
+                    "Connection: close\r\n"
+                    "\r\n");
+                return SENDING;
+                
                 //return valid http
                 return RECEIVING;                         
                 break;
@@ -133,6 +142,13 @@ ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
                 break;
             case REQ_PUT:
                 break;
+            case REQ_UNKNOWN:
+                r->rSize = snprintf(r->response, sizeof(r->response),
+                    "HTTP/1.1 404 Not Found\r\n"
+                    "Content-Length: 0\r\n"
+                    "Connection: close\r\n"
+                    "\r\n");
+                return SENDING;
             default:
                 break;
         }

@@ -187,23 +187,23 @@ Server_thread(){
 	lwip_listen(serverHandle.sock, 0);
 	serverHandle.remoteSize = sizeof(serverHandle.remote);
 	
-	u16 *chIdx = &serverHandle.connIdx;
-	while(1){
-		if( (serverHandle.ch[*chIdx].sd = 
-				lwip_accept(serverHandle.sock, 
-					(struct sockaddr *)&serverHandle.remote, (socklen_t*)&serverHandle.remoteSize)) > 0){
-
-			LOG_UART(LOG_TRACE, "-- NEW CLIENT ADDED --", NULL);
-
-			sys_thread_new(("Client_Handler"), cRequestHandle_thread,
-				(void*)&(serverHandle.ch[*chIdx].sd),
-				THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
-
-			if(++*chIdx >= TCP_MAX_CLIENTS){
-				break;
-			}
-		} 	
+	serverHandle.xClientHandleCount = xSemaphoreCreateCounting(TCP_MAX_CLIENTS,TCP_MAX_CLIENTS);	
+	if(serverHandle.xClientHandleCount == NULL){
+		LOG_UART(LOG_ERROR, LOG_ORIGIN("-- FAILED TO CREATE SEMAPHORE FOR SERVER DESCR. --"), NULL);
 	}
+	while(1){
+		if(xSemaphoreTake(serverHandle.xClientHandleCount, portMAX_DELAY) == pdTRUE){
+			if( (serverHandle.sd = lwip_accept(serverHandle.sock, 
+						(struct sockaddr *)&serverHandle.remote, (socklen_t*)&serverHandle.remoteSize)) > 0){
+
+				LOG_UART(LOG_TRACE, "-- NEW CLIENT ADDED --", NULL);
+				sys_thread_new(("Client_Handler"), cRequestHandle_thread,
+					(void*)&(serverHandle.sd),
+					THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
+			}
+		}
+	} 	
+	
 	LOG_UART(LOG_TRACE, LOG_ORIGIN("-- TCP MAX CLIENTS REACHED --"), NULL);
 	vTaskSuspend(NULL);
 }
@@ -213,7 +213,6 @@ enum TCPthread_states sdState;
 
 
 /*	TODO:
-	- Read + parse queued socket requests.
 	- process inside game thread -> user queue implementation.
 
 */
@@ -282,6 +281,7 @@ cRequestHandle_thread(void *p)
 			}
 			if(sd)
     			close(sd);
+			xSemaphoreGive(serverHandle.xClientHandleCount); //release your seat
     		vTaskDelete(NULL);
 			break;
 		default:

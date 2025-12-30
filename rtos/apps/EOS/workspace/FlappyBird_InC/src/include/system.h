@@ -44,8 +44,9 @@ struct TCP_ServerHandle_t{
     s16 remoteSize;
     struct sockaddr_in addr;
     struct sockaddr_in remote;
-    struct ClientHandle ch[TCP_MAX_CLIENTS]; 
-    u16    connIdx; // connected clients +1 
+    //struct ClientHandle ch[TCP_MAX_CLIENTS]; 
+    SemaphoreHandle_t xClientHandleCount;
+    int sd;
 };
 
 static enum HTTP_METHOD{
