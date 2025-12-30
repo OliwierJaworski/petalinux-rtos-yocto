@@ -51,7 +51,11 @@
                                 								
                                 <option id="xilinx.gnu.compiler.option.debugging.level.792302839" name="Debug Level" superClass="xilinx.gnu.compiler.option.debugging.level" useByScannerDiscovery="false" value="gnu.c.debugging.level.max" valueType="enumerated"/>
                                 								
-                                <option id="xilinx.gnu.compiler.inferred.swplatform.includes.926127448" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes"/>
+                                <option id="xilinx.gnu.compiler.inferred.swplatform.includes.926127448" name="Software Platform Include Path" superClass="xilinx.gnu.compiler.inferred.swplatform.includes" valueType="includePath">
+                                    									
+                                    <listOptionValue builtIn="false" value="${resolvePlatformFile:project=FlappyBird_InC,fileType=bspInclude}"/>
+                                    								
+                                </option>
                                 								
                                 <option id="xilinx.gnu.compiler.inferred.swplatform.flags.1287982839" name="Software Platform Inferred Flags" superClass="xilinx.gnu.compiler.inferred.swplatform.flags" value="  " valueType="string"/>
                                 								
@@ -59,13 +63,13 @@
                                 								
                                 <option id="xilinx.gnu.compiler.dircategory.includes.667569296" name="Include Paths" superClass="xilinx.gnu.compiler.dircategory.includes" valueType="includePath">
                                     									
-                                    <listOptionValue builtIn="false" value="${resolvePlatformFile:project=FlappyBird_InC,fileType=bspInclude}"/>
-                                    									
                                     <listOptionValue builtIn="false" value="&quot;${workspace_loc:/FlappyBird_InC/src/include}&quot;"/>
+                                    									
+                                    <listOptionValue builtIn="false" value="${resolvePlatformFile:project=FlappyBird_InC,fileType=bspInclude}"/>
                                     								
                                 </option>
                                 								
-                                <option id="xilinx.gnu.compiler.symbols.defined.2119320666" name="Defined symbols (-D)" superClass="xilinx.gnu.compiler.symbols.defined" valueType="definedSymbols"/>
+                                <option id="xilinx.gnu.compiler.symbols.defined.2119320666" name="Defined symbols (-D)" superClass="xilinx.gnu.compiler.symbols.defined"/>
                                 								
                                 <inputType id="xilinx.gnu.armv7.c.compiler.input.865550406" name="C source files" superClass="xilinx.gnu.armv7.c.compiler.input"/>
                                 							
@@ -153,7 +157,7 @@
                     					
                     <sourceEntries>
                         						
-                        <entry excluding="src/sources/|src/UGUI|_ide" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+                        <entry excluding="src/sources|http|src/UGUI|makefsdata|_ide" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
                         						
                         <entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="src/UGUI"/>
                         						

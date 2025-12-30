@@ -76,9 +76,18 @@ struct HttpRequest_t{
     struct HttpQuery queries;
     size_t QueryAmount;
     char data[10240];
+    char response[5120];
+    size_t rSize;
 };
 
-extern char Index_Http[4000];
+enum TCPthread_states{
+	CONNECTED, // new connection initialize 
+	RECEIVING,
+	PROCESSING,
+	SENDING,
+    DISCONNECT
+};
+extern char indexHtml[4000];
 
 void prvSetupHardware();
 int main_thread();
@@ -90,7 +99,7 @@ void print_echo_app_header();
 void echo_application_thread(void *);
 
 /* HTTP requests */
-void ProcessRequest(const char* HttpReq, struct HttpRequest_t *r);
+enum TCPthread_states ProcessRequest(const char* HttpReq, struct HttpRequest_t *r);
 
 #define VDMA_CONTROL_READ() Xil_In32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_CTRL_REG);
 /* MM2S VDMA CONTROL REGISTER */

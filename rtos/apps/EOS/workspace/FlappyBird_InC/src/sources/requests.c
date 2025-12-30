@@ -1,10 +1,12 @@
 #include "system.h"
 // template request header 
-static const char* Html_MainPage ="HTTP/1.1 %d %s\r\n \
-        						Content-Type: %s\r\n \
-								Content-Length: %d\r\n \
-								Connection: %s\r\n \
-								\r\n" ;
+static const char* Html_MainPage =
+                                "HTTP/1.1 %d %s\r\n"
+                                "Content-Type: %s\r\n"
+                                "Content-Length: %d\r\n"
+                                "Connection: %s\r\n"
+                                "\r\n"
+                                "%s";
 
 
 static void HttpHeaderFindValue(const char* HttpHeader, const char* key, char* r){
@@ -31,7 +33,8 @@ static void ParseQuery(const char* str, size_t len, struct HttpQuery* r){
     r->value[idx] ='\0';
 }
 
-void ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
+enum TCPthread_states
+ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
     //LOG_UART(LOG_TRACE,"DETERMENING REQUEST TYPE, CONTENT:",NULL);
     //LOG_UART(LOG_TRACE,HttpReq,NULL);
    
@@ -72,10 +75,12 @@ void ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
         if(pOP){
             // if it has arguments process them
             strncpy(r->header.ReqDir, pC, (pOP-pC)); 
+            r->header.ReqDir[(pOP-pC)+1] ='\0';
             LOG_UART(LOG_TRACE, r->header.ReqDir, NULL);
         }else{
-            pOP = strstr(pC, "HTTP/1.1"); // no queries so process path   
-            strncpy(r->header.ReqDir, pC, (pOP-pC)); 
+            pOP = strstr(pC, " HTTP/1.1"); // no queries so process path   
+            strncpy(r->header.ReqDir, pC, (pOP-pC)); //dont include space char 
+            r->header.ReqDir[(pOP-pC)+1] ='\0';
             LOG_UART(LOG_TRACE, r->header.ReqDir, NULL);
         }
 
@@ -101,10 +106,31 @@ void ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
                 }
             }else{ //only 1 argument remains
                 pOP = strstr(pC," HTTP/1.1"); //it also searches for space character
-                ParseQuery(pC, (pOP-pC), cQuery);                
-                LOG_UART(LOG_DEBUG,LOG_ORIGIN("=== QUERIES ==="),LOG_printHttpQueries, &r->queries);
-                return;
+                if(pOP != 0){// found query 
+                    ParseQuery(pC, (pOP-pC), cQuery);                
+                    LOG_UART(LOG_DEBUG,LOG_ORIGIN("=== QUERIES ==="),LOG_printHttpQueries, &r->queries);
+                }
+                break;
             }
+        }
+
+        switch(r->header.ReqType){
+            case REQ_GET:
+                if(strcmp(r->header.ReqDir, "/") == 0){// home directory requested
+                    const char* body = indexHtml;
+                    size_t body_len = strlen(body); 
+                    r->rSize =snprintf(r->response,sizeof(r->response), Html_MainPage,200,"OK",
+                        "text/html",body_len, "Keep-Alive", body);
+                    return SENDING; 
+                }
+                                           
+                break;
+            case REQ_POST:
+                break;
+            case REQ_PUT:
+                break;
+            default:
+                break;
         }
 
     }else{
@@ -113,14 +139,5 @@ void ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
         return;
     }   
 
-    switch(r->header.ReqType){
-        case REQ_GET:
-            break;
-        case REQ_POST:
-            break;
-        case REQ_PUT:
-            break;
-        default:
-            break;
-    }
+    
 }

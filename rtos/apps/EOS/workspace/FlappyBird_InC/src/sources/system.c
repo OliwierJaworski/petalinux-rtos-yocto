@@ -208,12 +208,7 @@ Server_thread(){
 	vTaskSuspend(NULL);
 }
 
-enum TCPthread_states{
-	CONNECTED, // new connection initialize 
-	RECEIVING,
-	PROCESSING,
-	SENDING,
-}; 
+ 
 enum TCPthread_states sdState;
 
 
@@ -244,41 +239,34 @@ cRequestHandle_thread(void *p)
 		LOG_UART(LOG_ERROR, "COULD NOT ALLOCATE HttpRequest_t SIZE", NULL);
 
 	sdState = PROCESSING;
-
+	int r; //status var
 	while(1){
 		switch(sdState){
-		case CONNECTED :
 		case RECEIVING:
-			//recv(sd, recv_buf, sizeof(recv_buf), 0);
+			r = recv(sd, recv_buf, sizeof(recv_buf), 0); //blocking for thread not rtos
+			if (r == 0) {            // client closed
+        		sdState = DISCONNECT;
+        		break;
+    		}
+			sdState = PROCESSING;
+			break;
 		case PROCESSING:
-			ProcessRequest(recv_buf, req);
-			sdState = RECEIVING;
+			sdState = ProcessRequest(recv_buf, req);
+			break;
 		case SENDING:
+			write(sd, req->response, req->rSize);
+			sdState = RECEIVING;
+			break;
+		case DISCONNECT:
+			vPortFree(req);
+    		close(sd);
+    		vTaskDelete(NULL);
+			break;
 		default:
-	}
-};
-	
-
-	int body_len = sizeof(indexHtml)-1; 
-	char header[256];
-    int header_len = snprintf(header, sizeof(header),
-        "HTTP/1.1 200 OK\r\n"
-        "Content-Type: text/html\r\n"
-        "Content-Length: %d\r\n"
-        "Connection: close\r\n"
-        "\r\n",
-        body_len);
-
-    /* send header */
-    if (header_len > 0)
-        write(sd, header, header_len);
-
-    /* send body */
-    write(sd, indexHtml, body_len);
-
-    /* close connection */
-    close(sd);
-    vTaskDelete(NULL);
+			exit(1);
+			break;
+		}
+	};
 }
 
 static void 

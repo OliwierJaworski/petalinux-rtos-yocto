@@ -1,5 +1,5 @@
-2025-12-27T12:53:27.847790700255-12:53:27 **** Incremental Build of project PYNQ_Z2_ETHERNET_HDMI ****
-000-buildplatform.bat 63313 PYNQ_Z2_ETHERNET_HDMI freertos_domain,zynq_fsbl 
+2025-12-29T15:11:09.128105300255-15:11:09 **** Build of project PYNQ_Z2_ETHERNET_HDMI ****
+000-buildplatform.bat 64844 PYNQ_Z2_ETHERNET_HDMI  
 000-
 000-****** Software Commandline Tool (XSCT) v2024.2.0
 000-  **** SW Build 5239620 on Sun Nov 10 09:56:12 MST 2024
@@ -11,7 +11,7 @@
 000-We recommend using the new Python command-line tool for project management and debugging:
 000-- Run "vitis -i" for interactive mode.
 000-- Run "vitis -s <script>" for script mode.
-000-XSDB Server Channel: tcfchan#1
+000-XSDB Server Channel: tcfchan#4
 000-Building the zynq_fsbl application.
 000-make: Entering directory 'M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/zynq_fsbl/zynq_fsbl_bsp'
 000-
@@ -298,6 +298,13 @@
 000-ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostar
 000-tfiles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 000-
+000/PYNQ_Z2_ETHERNET_HDMI58-1-1missing initializer for field 'IntrId' of 'XAxiVdma_Config' [-Wmissing-field-initializers]1-xaxivdma_g.c:58:9: warning: missing initializer for field 'IntrId' of 'XAxiVdma_Config' [-Wmissing-field-initializers]
+000-   58 |         }
+000-      |         ^
+000-In file included from xaxivdma_g.c:17:
+000/PYNQ_Z2_ETHERNET_HDMI453-1-1'IntrId' declared here0-xaxivdma.h:453:13: note: 'IntrId' declared here
+000-  453 |         u16 IntrId[2]; /** Bits[11:0] Interrupt-id Bits[15:12] trigger type and level flags */
+000-      |             ^~~~~~
 000-"Running Make libs in ps7_cortexa9_0/libsrc/gpiops_v3_13/src"
 000-
 000-make -C ps7_cortexa9_0/libsrc/gpiops_v3_13/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "
@@ -364,6 +371,9 @@
 000-RCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostart
 000-files -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 000-
+000/PYNQ_Z2_ETHERNET_HDMI45-1-1'#pragma message: For the sleep routines, Global timer is being used'0-xtime_l.c:45:9: note: '#pragma message: For the sleep routines, Global timer is being used'
+000-   45 | #pragma message ("For the sleep routines, Global timer is being used")
+000-      |         ^~~~~~~
 000-'Finished building libraries parallelly.'
 000-
 000-make --no-print-directory archive
@@ -403,9 +413,46 @@
 000-ib/xusbps_endpoint.o ps7_cortexa9_0/lib/xusbps_g.o ps7_cortexa9_0/lib/xusbps_hw.o ps7_cortexa9_0/lib/xusbps_intr.o ps7_cortexa9
 000-_0/lib/xusbps_sinit.o
 000-
+000-arm-none-eabi-ar: creating ps7_cortexa9_0/lib/libxil.a
 000-'Finished building libraries'
 000-
 000-make: Leaving directory 'M:/Github/petalinux-rtos-yocto/rtos/apps/EOS/workspace/PYNQ_Z2_ETHERNET_HDMI/zynq_fsbl/zynq_fsbl_bsp'
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c sd.c -o sd.o -Izynq_fsbl_bsp/ps7_cort
+000-exa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c nand.c -o nand.o -Izynq_fsbl_bsp/ps7_
+000-cortexa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c image_mover.c -o image_mover.o -Izynq
+000-_fsbl_bsp/ps7_cortexa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c md5.c -o md5.o -Izynq_fsbl_bsp/ps7_co
+000-rtexa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c fsbl_hooks.c -o fsbl_hooks.o -Izynq_f
+000-sbl_bsp/ps7_cortexa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c main.c -o main.o -Izynq_fsbl_bsp/ps7_
+000-cortexa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c rsa.c -o rsa.o -Izynq_fsbl_bsp/ps7_co
+000-rtexa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c nor.c -o nor.o -Izynq_fsbl_bsp/ps7_co
+000-rtexa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c qspi.c -o qspi.o -Izynq_fsbl_bsp/ps7_
+000-cortexa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c ps7_init.c -o ps7_init.o -Izynq_fsbl_
+000-bsp/ps7_cortexa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c pcap.c -o pcap.o -Izynq_fsbl_bsp/ps7_
+000-cortexa9_0/include -I.
+000-
+000-arm-none-eabi-gcc  -O2 -c -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard  -c fsbl_handoff.S -o fsbl_handoff.o -Izy
+000-nq_fsbl_bsp/ps7_cortexa9_0/include -I.
 000-
 000-arm-none-eabi-gcc -o fsbl.elf fsbl_handoff.o fsbl_hooks.o image_mover.o main.o md5.o nand.o nor.o pcap.o ps7_init.o qspi.o rsa.
 000-o sd.o -MMD -MP       -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard   -mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -Wl,-build-id
@@ -606,6 +653,8 @@
 000-
 000-"Running Make include in ps7_cortexa9_0/libsrc/qspips_v3_13/src"
 000-
+000-"includes"
+000-
 000-make -C ps7_cortexa9_0/libsrc/qspips_v3_13/src -s include  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as
 000-" "ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nos
 000-tartfiles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
@@ -629,8 +678,6 @@
 000-artfiles -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 000-
 000-"Running Make include in ps7_cortexa9_0/libsrc/sdps_v4_4/src"
-000-
-000-"includes"
 000-
 000-make -C ps7_cortexa9_0/libsrc/sdps_v4_4/src -s include  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "
 000-ARCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostar
@@ -692,6 +739,13 @@
 000-
 000-"Running Make libs in ps7_cortexa9_0/libsrc/dmaps_v2_11/src"
 000-
+000/PYNQ_Z2_ETHERNET_HDMI58-1-1missing initializer for field 'IntrId' of 'XAxiVdma_Config' [-Wmissing-field-initializers]1-xaxivdma_g.c:58:9: warning: missing initializer for field 'IntrId' of 'XAxiVdma_Config' [-Wmissing-field-initializers]
+000-   58 |         }
+000-      |         ^
+000-In file included from xaxivdma_g.c:17:
+000/PYNQ_Z2_ETHERNET_HDMI453-1-1'IntrId' declared here0-xaxivdma.h:453:13: note: 'IntrId' declared here
+000-  453 |         u16 IntrId[2]; /** Bits[11:0] Interrupt-id Bits[15:12] trigger type and level flags */
+000-      |             ^~~~~~
 000-make -C ps7_cortexa9_0/libsrc/dmaps_v2_11/src -s libs  "SHELL=CMD" "COMPILER=arm-none-eabi-gcc" "ASSEMBLER=arm-none-eabi-as" "A
 000-RCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostart
 000-files -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
@@ -768,6 +822,7 @@
 000-RCHIVER=arm-none-eabi-ar" "COMPILER_FLAGS=  -O2 -c" "EXTRA_COMPILER_FLAGS=-mcpu=cortex-a9 -mfpu=vfpv3 -mfloat-abi=hard -nostart
 000-files -g -Wall -Wextra -fno-tree-loop-distribute-patterns"
 000-
+000-arm-none-eabi-ar: creating ../../../lib/libfreertos.a
 000-'Finished building libraries parallelly.'
 000-
 000-make --no-print-directory archive
@@ -806,8 +861,9 @@
 000-tps_selftest.o ps7_cortexa9_0/lib/xuartps_sinit.o ps7_cortexa9_0/lib/xusbps.o ps7_cortexa9_0/lib/xusbps_endpoint.o ps7_cortexa9
 000-_0/lib/xusbps_g.o ps7_cortexa9_0/lib/xusbps_hw.o ps7_cortexa9_0/lib/xusbps_intr.o ps7_cortexa9_0/lib/xusbps_sinit.o
 000-
+000-arm-none-eabi-ar: creating ps7_cortexa9_0/lib/libxil.a
 000-'Finished building libraries'
 000-
 00255-
-12:53:41 Build Finished (took 13s.187ms)
+15:11:30 Build Finished (took 21s.161ms)
 
