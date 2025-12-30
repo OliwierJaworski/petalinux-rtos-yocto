@@ -223,7 +223,7 @@ cRequestHandle_thread(void *p)
     int sd = *(int*)p;
     char recv_buf[2048];
     int n;
-
+	struct xHeapStats stat;
     struct HttpRequest_t *req;  
 	
 	// check whether the connected socket request is valid
@@ -232,17 +232,24 @@ cRequestHandle_thread(void *p)
         close(sd);
         vTaskDelete(NULL);
     }
-	recv_buf[2047]='\0'; //just to make sure its null terminate so string ops dont cause err
 	// create a request structure
-	req = pvPortCalloc(1, sizeof(struct HttpRequest_t));
-	if(req == NULL)
-		LOG_UART(LOG_ERROR, "COULD NOT ALLOCATE HttpRequest_t SIZE", NULL);
-
-	sdState = PROCESSING;
+	vPortGetHeapStats(&stat);
+	if(stat.xSizeOfLargestFreeBlockInBytes < sizeof(struct HttpRequest_t)+HEAP_RESERVE_QUERY){
+		sdState = DISCONNECT;
+	}else{
+		req = pvPortCalloc(1, sizeof(struct HttpRequest_t));
+		if(!req)
+			LOG_UART(LOG_ERROR, "COULD NOT ALLOCATE HttpRequest_t SIZE", NULL);
+		sdState = PROCESSING;
+	}
+	
 	int r; //status var
 	while(1){
 		switch(sdState){
 		case RECEIVING:
+			LOG_UART(LOG_TRACE, "REQUEST HANDLER RECEIVING", NULL);
+			memset(recv_buf, 0, sizeof(recv_buf));
+			recv_buf[2047]='\0'; //just to make sure its null terminate so string ops dont cause err
 			r = recv(sd, recv_buf, sizeof(recv_buf), 0); //blocking for thread not rtos
 			if (r == 0) {            // client closed
         		sdState = DISCONNECT;
@@ -251,6 +258,7 @@ cRequestHandle_thread(void *p)
 			sdState = PROCESSING;
 			break;
 		case PROCESSING:
+        	memset(req,0, sizeof(struct HttpRequest_t));
 			sdState = ProcessRequest(recv_buf, req);
 			break;
 		case SENDING:
@@ -258,11 +266,26 @@ cRequestHandle_thread(void *p)
 			sdState = RECEIVING;
 			break;
 		case DISCONNECT:
-			vPortFree(req);
-    		close(sd);
+			LOG_UART(LOG_TRACE, "REQUEST HANDLER ISBEING FREED", NULL);
+			if(req){
+				struct HttpQuery* b = (req->queries.next)?req->queries.next:NULL; //first query is on the stack
+				while(b){
+					if(b->next){
+						b = b->next;
+						vPortFree(b->prev);
+					}else{
+						vPortFree(b);
+						b=NULL;
+					}
+				}
+				vPortFree(req);
+			}
+			if(sd)
+    			close(sd);
     		vTaskDelete(NULL);
 			break;
 		default:
+			LOG_UART(LOG_ERROR, LOG_ORIGIN("NOT PREDICTED DEFAULT"), NULL);
 			exit(1);
 			break;
 		}

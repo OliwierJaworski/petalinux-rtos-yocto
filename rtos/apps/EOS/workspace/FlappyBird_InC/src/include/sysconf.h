@@ -9,7 +9,7 @@
 #define SD_INDEX_HTML           "index.html"
 #define SD_DEFAULT_VOLUME       "0:/"
 #define VERBOSITY               3
-
+#define HEAP_RESERVE_QUERY      10240
 /* VDMA-HDMI */
 // https://docs.amd.com/r/en-US/pg020_axi_vdma/MM2S_VDMACR-MM2S-VDMA-Control-Register-Offset-00h
 #include "xil_io.h"

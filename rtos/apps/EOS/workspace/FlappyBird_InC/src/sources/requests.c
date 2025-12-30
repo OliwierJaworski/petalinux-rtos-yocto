@@ -89,13 +89,16 @@ ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
         */
         pC = pOP; // move active character after the path character 
         struct HttpQuery *cQuery = &r->queries; // currently processed query
-
+	    struct xHeapStats stat;
         while(1){
             pC++; //skip the ? character to prevent infinite loop && pOP-pC = 1 
             if((pOP = strchr(pC,'?')) != NULL){ //multiple arguments
                 ParseQuery(pC, (pOP-pC), cQuery);//10th addr-> '?'               
                 if(cQuery->next == NULL){
-                   cQuery->next = pvPortMalloc(sizeof(struct HttpQuery));
+                    if(stat.xSizeOfLargestFreeBlockInBytes < sizeof(struct HttpQuery)*2){
+		                return DISCONNECT;		
+	                }
+                    cQuery->next = pvPortCalloc(1,sizeof(struct HttpQuery));
                     if(cQuery->next == NULL)
                        LOG_UART(LOG_ERROR,"FAILED TO ALLOCATE MEMORY FOR HTTP QUERY OBJECT", NULL); 
                     
@@ -123,7 +126,8 @@ ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
                         "text/html",body_len, "Keep-Alive", body);
                     return SENDING; 
                 }
-                                           
+                //return valid http
+                return RECEIVING;                         
                 break;
             case REQ_POST:
                 break;
@@ -135,8 +139,9 @@ ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
 
     }else{
         // not HTTP request | request which can be parsed by system
-        LOG_UART(LOG_ERROR, "NOT A HTTP HEADER", NULL);
-        return;
+        LOG_UART(LOG_TRACE, "NOT A HTTP HEADER", NULL);
+        LOG_UART(LOG_TRACE, HttpReq, NULL);
+        return DISCONNECT;	
     }   
 
     
