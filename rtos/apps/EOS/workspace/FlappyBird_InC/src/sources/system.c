@@ -232,11 +232,12 @@ cRequestHandle_thread(void *p)
     struct HttpRequest_t *req;  
 	
 	// check whether the connected socket request is valid
-	n = read(sd, recv_buf, sizeof(recv_buf));
-	if (n <= 0) {
+	n = read(sd, recv_buf, sizeof(recv_buf)-1);
+	if (n <= 0 || n > sizeof(recv_buf)-1) {
         close(sd);
         vTaskDelete(NULL);
     }
+	recv_buf[2047]='\0'; //just to make sure its null terminate so string ops dont cause err
 	// create a request structure
 	req = pvPortCalloc(1, sizeof(struct HttpRequest_t));
 	if(req == NULL)

@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "system.h"
 /*semaphore for exclusive uart control to prevent deadlocks*/
 SemaphoreHandle_t xUartSemaphore;
 
@@ -72,4 +73,14 @@ LOG_printIPsettings(va_list vArgs)
 	print_ip("Netmask : ", mask);
 	print_ip("Gateway : ", gw);
 }
-    
+
+void
+LOG_printHttpQueries(va_list vArgs){
+    struct HttpQuery *pQ = va_arg(vArgs,struct HttpQuery*);
+    xil_printf("--- Query Values ---\r\n");
+    while(pQ != NULL){
+        xil_printf("KEY:%s, VALUE:%s\r\n",pQ->key,pQ->value);
+        pQ = pQ->next;
+    }
+    xil_printf("----------------\r\n");
+}

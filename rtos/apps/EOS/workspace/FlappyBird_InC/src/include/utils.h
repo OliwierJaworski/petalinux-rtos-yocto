@@ -43,5 +43,7 @@ LOG_UART(int verbosity,const char* msg, log_func_t printer, ...);
 /* callback function types*/
 void LOG_printIPsettings(va_list vargs);
 void LOG_test(va_list vargs);
+void LOG_printHttpQueries(va_list vargs);
+
 
 #endif

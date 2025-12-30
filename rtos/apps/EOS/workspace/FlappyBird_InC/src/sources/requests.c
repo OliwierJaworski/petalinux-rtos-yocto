@@ -11,6 +11,26 @@ static void HttpHeaderFindValue(const char* HttpHeader, const char* key, char* r
     
 }
 
+static void ParseQuery(const char* str, size_t len, struct HttpQuery* r){
+    char* pC = str; // this variable can be replaced by str 
+    char iC=0;
+    u8 idx=0; // why would it be longer?
+    while(idx < len &&(iC = pC[idx]) != '='){ //len -> delim character(?)
+       r->key[idx] = iC; 
+       idx++;
+    }
+    r->value[idx] ='\0';
+    pC=&pC[idx]; //move by the processed chars
+    pC++; //skip '='
+    len -= (idx+1); // current character also counts as idx++
+    idx =0;
+    while(idx < len){
+       r->value[idx] = pC[idx]; 
+       idx++;
+    }
+    r->value[idx] ='\0';
+}
+
 void ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
     //LOG_UART(LOG_TRACE,"DETERMENING REQUEST TYPE, CONTENT:",NULL);
     //LOG_UART(LOG_TRACE,HttpReq,NULL);
@@ -55,11 +75,37 @@ void ProcessRequest(const char* HttpReq, struct HttpRequest_t *r){
             LOG_UART(LOG_TRACE, r->header.ReqDir, NULL);
         }else{
             pOP = strstr(pC, "HTTP/1.1"); // no queries so process path   
-            strncpy(r->header.ReqDir, pC, (pOP-pC-1)); 
+            strncpy(r->header.ReqDir, pC, (pOP-pC)); 
             LOG_UART(LOG_TRACE, r->header.ReqDir, NULL);
         }
+
         /* process and add queries
+           - double Linked list stores query values 
         */
+        pC = pOP; // move active character after the path character 
+        struct HttpQuery *cQuery = &r->queries; // currently processed query
+
+        while(1){
+            pC++; //skip the ? character to prevent infinite loop && pOP-pC = 1 
+            if((pOP = strchr(pC,'?')) != NULL){ //multiple arguments
+                ParseQuery(pC, (pOP-pC), cQuery);//10th addr-> '?'               
+                if(cQuery->next == NULL){
+                   cQuery->next = pvPortMalloc(sizeof(struct HttpQuery));
+                    if(cQuery->next == NULL)
+                       LOG_UART(LOG_ERROR,"FAILED TO ALLOCATE MEMORY FOR HTTP QUERY OBJECT", NULL); 
+                    
+                    cQuery->next->prev = cQuery;
+                    cQuery = cQuery->next; //next query element shoudl get filled
+                    r->QueryAmount++;
+                    pC =pOP; //assign next value to current char*
+                }
+            }else{ //only 1 argument remains
+                pOP = strstr(pC," HTTP/1.1"); //it also searches for space character
+                ParseQuery(pC, (pOP-pC), cQuery);                
+                LOG_UART(LOG_DEBUG,LOG_ORIGIN("=== QUERIES ==="),LOG_printHttpQueries, &r->queries);
+                return;
+            }
+        }
 
     }else{
         // not HTTP request | request which can be parsed by system
