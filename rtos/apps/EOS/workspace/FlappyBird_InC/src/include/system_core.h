@@ -43,13 +43,14 @@ struct NETHandle_t{
     ip_addr_t gw;
 };
 
-struct TCPHandle_t{
+struct SOCKHandle_t{
     s16 sock;
-    s16 remoteSize;
+    socklen_t remoteSize;
     struct sockaddr_in addr;
     struct sockaddr_in remote;
     SemaphoreHandle_t xClientsemphrCounting;
     int sd;
+    char buffer[10240]; // 10kb buffer
 };
 
 struct SYSHandle_t{
@@ -57,13 +58,15 @@ struct SYSHandle_t{
     struct HTTPhandle_t http;
     struct GRAPHICSHandle_t graphics;
     struct NETHandle_t net;
-    struct TCPHandle_t tcpServer;
+    struct SOCKHandle_t tcpServer;
+    struct SOCKHandle_t udpServer;
 };
 
 void prvSetupHardware(struct SYSHandle_t *sys);
 int main_thread(void* arg);
 void network_thread(void *arg);
 void TCP_server_thread(void *arg);
+void UDP_server_thread(void *arg);
 
 
 /* MM2S VDMA CONTROL REGISTER */

@@ -75,8 +75,11 @@ main_thread(void* arg){
         if (net->netif.ip_addr.addr) {
 			LOG_UART(LOG_DEBUG, LOG_ORIGIN("-- DHCP SUCCESS : IP SETTINGS --"),LOG_printIPsettings,
 						 &(net->netif.ip_addr), &(net->netif.netmask), &(net->netif.gw));
-			sys_thread_new("Server_Thread", TCP_server_thread, (void*)sys,
+			sys_thread_new("TCP_Server_Thread", TCP_server_thread, (void*)sys,
 					TCP_THREAD_STACKSIZE,
+					DEFAULT_THREAD_PRIO);
+			sys_thread_new("UDP_Server_Thread", UDP_server_thread, (void*)sys,
+					UDP_THREAD_STACKSIZE,
 					DEFAULT_THREAD_PRIO);
 			break;
 		}
@@ -89,9 +92,12 @@ main_thread(void* arg){
 			IP4_ADDR(&(net->netif.gw), 192, 168, 1, 1);
 			LOG_UART(LOG_DEBUG, LOG_ORIGIN("-- DHCP ERROR : STATIC IP SETTINGS --"), LOG_printIPsettings,
 					 &(net->netif.ip_addr), &(net->netif.netmask), &(net->netif.gw));
-			sys_thread_new("Server Thread", TCP_server_thread, 0,
+			sys_thread_new("TCP_Server Thread", TCP_server_thread, 0,
 						   TCP_THREAD_STACKSIZE,
 						   DEFAULT_THREAD_PRIO);
+			sys_thread_new("UDP_Server_Thread", UDP_server_thread, (void*)sys,
+					UDP_THREAD_STACKSIZE,
+					DEFAULT_THREAD_PRIO);
 			break;
 		}
     }
@@ -140,7 +146,7 @@ network_thread(void *arg){
 void 
 TCP_server_thread(void *arg){
     struct SYSHandle_t *sys = (struct SYSHandle_t*) arg;
-    struct TCPHandle_t *tcp = &sys->tcpServer;
+    struct SOCKHandle_t *tcp = &sys->tcpServer;
 
     if ((tcp->sock = lwip_socket(AF_INET, SOCK_STREAM, 0)) < 0)	{
         LOG_UART(LOG_ERROR, LOG_ORIGIN("-- FAILED TO ASSIGN SOCKET FOR SERVER HANDLE --"), NULL, 0);
@@ -163,4 +169,42 @@ TCP_server_thread(void *arg){
 	}
     vTaskDelete(NULL);
 }
+
+void 
+UDP_server_thread(void *arg){
+    struct SYSHandle_t *sys = (struct SYSHandle_t*) arg;
+    struct SOCKHandle_t *udp = &sys->udpServer;
+	s32_t recv_id = 0;
+	char* data = "hello from udp server!";
+    if ((udp->sock = lwip_socket(AF_INET, SOCK_DGRAM, 0)) < 0)	{
+        LOG_UART(LOG_ERROR, LOG_ORIGIN("-- FAILED TO ASSIGN SOCKET FOR SERVER HANDLE --"), NULL, 0);
+    }
     
+    udp->addr.sin_family = AF_INET;
+	udp->addr.sin_port = htons(UDP_PORT);
+	udp->addr.sin_addr.s_addr = INADDR_ANY;
+	udp->remoteSize = sizeof(udp->remote);
+
+    if(lwip_bind(udp->sock, (struct sockaddr*)&udp->addr, sizeof(udp->addr)) < 0)
+		LOG_UART(LOG_DEBUG, LOG_ORIGIN("-- FAILED TO BIND SOCKET --"), NULL);
+
+	while(1){
+		if(lwip_recvfrom(udp->sock, udp->buffer, sizeof(udp->buffer), 0, (struct sockaddr*)&udp->remote, (socklen_t*)&udp->remoteSize) <=0){
+			LOG_UART(LOG_ERROR,LOG_ORIGIN("UDP recv something went wrong"),NULL,0);
+			continue;
+		}
+		LOG_UART(LOG_TRACE, "-- NEW UDP DATA RECEIVED --", NULL);
+		/* in case the user wants ordered datagrams it must be implemented separately.
+			- meaning: send a message and prepend the message number eg
+			- recv_id = ntohl(*((int*)udp->buffer));	// check whether datagram is recvd in order
+			- not implemented here
+		*/
+
+		if(lwip_sendto(udp->sock, data, strlen(data), 0, (struct sockaddr*)&udp->remote,udp->remoteSize ) < 0){
+			LOG_UART(LOG_ERROR,"FAILED TO SEND MESSAGE OVER UDP", NULL, 0);	
+		}
+	}
+	
+    vTaskDelete(NULL);
+}
+

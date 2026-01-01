@@ -19,6 +19,10 @@
 #define TCP_HTTP_PORT               80
 #define TCP_MAX_CLIENTS             10
 #define TCP_SETUP_WAIT              500
+
+#define UDP_THREAD_STACKSIZE        1024
+#define UDP_PORT                    801
+
 /* VDMA-HDMI 
     - docs: https://docs.amd.com/r/en-US/pg020_axi_vdma/MM2S_VDMACR-MM2S-VDMA-Control-Register-Offset-00h
 */
