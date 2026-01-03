@@ -61,7 +61,9 @@ int
 main_thread(void* arg){
     struct SYSHandle_t *sys = (struct SYSHandle_t*) arg;
     struct NETHandle_t *net = &sys->net;
+    struct GAMEHandle_t *game = &sys->game;
     int mscnt = 0;
+    BaseType_t xReturned;
 
     lwip_init(); /* initialize lwIP before calling sys_thread_new */
 
@@ -101,8 +103,34 @@ main_thread(void* arg){
 			break;
 		}
     }
+    xReturned = xTaskCreate(Game_thread,"Game_Thread", GAME_TASK_STACK_SIZE, (void*)sys, 
+					GAME_TASK_PRIORITY, &game->xGameHandle); 
+    if(xReturned != pdPASS)
+        LOG_UART(LOG_ERROR, LOG_ORIGIN("TASK CREATION FAILED"), NULL, 0);
     vTaskDelete(NULL);
     return 0;
+}
+
+void Game_thread(void *arg){
+    struct SYSHandle_t  *sys = (struct SYSHandle_t*) arg;
+    struct GAMEHandle_t *game = (struct GAMEHandle_t*) &sys->game;
+    struct GRAPHICSHandle_t *graphics = (struct GRAPHICSHandle_t*) &sys->graphics;
+    struct SOCKHandle_t *udp = (struct SOCKHandle_t*) &sys->udpServer;
+    
+    UG_Init(&graphics->gui, vdmaPxlSet_CB ,HDMI_HSIZE, HDMI_VSIZE, &sys->graphics);
+    Xil_DCacheDisable();
+    UG_FillScreen(C_RED);
+    Xil_DCacheEnable();
+    //  wait until 2 player ids were collected from the queue skipping the input provided
+    //  draw the players different colors
+    //  poll the inputs
+    //  check collisions
+    //  draw structures 
+    //  find a way to embed void* p into draw function -> why: no global variables
+    for(;;){
+
+    } 
+    vTaskDelete(NULL); 
 }
 
 void 

@@ -14,6 +14,7 @@
 /* USER DEFINED */
 #include "system_config.h"
 #include "system_utils.h"
+#include "system_graphics.h"
 
 struct SDhandle_t{
     SemaphoreHandle_t xSDsemphr;
@@ -32,7 +33,21 @@ struct HTTPhandle_t{
 };
 
 struct GRAPHICSHandle_t{
+    UG_GUI gui ;
     UINTPTR frame_buffers[3];
+};
+
+struct PLAYER_t{
+    int x;
+    int y;
+    int xw; 
+    int yw; 
+    u32 score;
+};
+
+struct GAMEHandle_t{
+    TaskHandle_t xGameHandle;
+    struct PLAYER_t players[MAX_PLAYERS];
 };
 
 struct NETHandle_t{
@@ -62,6 +77,7 @@ struct SOCKHandle_t{
 struct SYSHandle_t{
     struct SDhandle_t sd;
     struct HTTPhandle_t http;
+    struct GAMEHandle_t game;
     struct GRAPHICSHandle_t graphics;
     struct NETHandle_t net;
     struct SOCKHandle_t tcpServer;
@@ -70,13 +86,12 @@ struct SYSHandle_t{
 
 void prvSetupHardware(struct SYSHandle_t *sys);
 int main_thread(void* arg);
+void Game_thread(void* arg);
 void network_thread(void *arg);
 void TCP_server_thread(void *arg);
 void UDP_server_thread(void *arg);
 int messageParseData(const char* in, struct Umessage_t* m);
 //void cReqHandle_TCP(void* arg); //not important for right now
-
-
 
 /* MM2S VDMA CONTROL REGISTER */
 #define VDMA_CONTROL_WRITE(cmd) Xil_Out32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_CTRL_REG, (cmd))
