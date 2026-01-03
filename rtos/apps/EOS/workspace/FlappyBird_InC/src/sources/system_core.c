@@ -175,6 +175,8 @@ UDP_server_thread(void *arg){
     struct SYSHandle_t *sys = (struct SYSHandle_t*) arg;
     struct SOCKHandle_t *udp = &sys->udpServer;
 	s32_t recv_id = 0;
+	struct Umessage_t dataBuf; 
+	int len;
 	char* data = "hello from udp server!";
     if ((udp->sock = lwip_socket(AF_INET, SOCK_DGRAM, 0)) < 0)	{
         LOG_UART(LOG_ERROR, LOG_ORIGIN("-- FAILED TO ASSIGN SOCKET FOR SERVER HANDLE --"), NULL, 0);
@@ -189,22 +191,115 @@ UDP_server_thread(void *arg){
 		LOG_UART(LOG_DEBUG, LOG_ORIGIN("-- FAILED TO BIND SOCKET --"), NULL);
 
 	while(1){
-		if(lwip_recvfrom(udp->sock, udp->buffer, sizeof(udp->buffer), 0, (struct sockaddr*)&udp->remote, (socklen_t*)&udp->remoteSize) <=0){
+		if((len = lwip_recvfrom(udp->sock, udp->buffer, sizeof(udp->buffer), 0, (struct sockaddr*)&udp->remote, (socklen_t*)&udp->remoteSize)) <=0){
 			LOG_UART(LOG_ERROR,LOG_ORIGIN("UDP recv something went wrong"),NULL,0);
 			continue;
-		}
+		} 
+		if (len <= 0) continue; //skip if no data recvd
+		udp->buffer[len] ='\0';//prevent weird string behavior
 		LOG_UART(LOG_TRACE, "-- NEW UDP DATA RECEIVED --", NULL);
+
 		/* in case the user wants ordered datagrams it must be implemented separately.
 			- meaning: send a message and prepend the message number eg
 			- recv_id = ntohl(*((int*)udp->buffer));	// check whether datagram is recvd in order
 			- not implemented here
 		*/
+		if(messageParseData(udp->buffer ,&dataBuf)!= 0){
+			LOG_UART(LOG_ERROR,LOG_ORIGIN("UDP INVALID DATA RECEIVED"), NULL, 0);	
+			continue;	
+		}
+		char id_buf[4]; // 0..255
+		snprintf(id_buf, sizeof(id_buf), "%u", dataBuf.id);
+		LOG_UART(LOG_TRACE, id_buf, NULL);
+		LOG_UART(LOG_TRACE, dataBuf.cmd, NULL);
+		xQueueSendToBack(udp->mQueue, (const void*)&dataBuf, portMAX_DELAY); //wait until there is room int the queue
 
 		if(lwip_sendto(udp->sock, data, strlen(data), 0, (struct sockaddr*)&udp->remote,udp->remoteSize ) < 0){
-			LOG_UART(LOG_ERROR,"FAILED TO SEND MESSAGE OVER UDP", NULL, 0);	
+		LOG_UART(LOG_ERROR,"FAILED TO SEND MESSAGE OVER UDP", NULL, 0);	
+	
 		}
 	}
 	
     vTaskDelete(NULL);
 }
+
+//internal for messageParseData
+static int parse_u8(const char *s, uint8_t *out)
+{
+    if (!s || !*s) return -1;
+    char *end = NULL;
+    long v = strtol(s, &end, 10);
+    if (end == s || *end != '\0') return -1;
+    if (v < 0 || v > 255) return -1;
+    *out = (uint8_t)v;
+    return 0;
+}
+
+int messageParseData(const char *in, struct Umessage_t *m)
+{
+    if (!in || !m) return -1;
+
+    m->id = 0;
+    m->cmd[0] = '\0';
+
+    // must start with "GET "
+    if (strncmp(in, "GET ", 4) != 0) return -1;
+
+    // find URI start and HTTP marker
+    const char *uri = in + 4;
+    const char *http = strstr(uri, " HTTP/1.1");
+    if (!http) return -1;
+
+    // We will scan URI between [uri, http)
+    // find query start '?'
+    const char *q = memchr(uri, '?', (size_t)(http - uri));
+    if (!q) return -1;          // require query for your use-case
+    q++;                        // points to first key
+
+    // parse pairs separated by '&'
+    while (q < http) {
+        const char *pair_end = memchr(q, '&', (size_t)(http - q));
+        if (!pair_end) pair_end = http;
+
+        const char *eq = memchr(q, '=', (size_t)(pair_end - q));
+        if (!eq) return -1;
+
+        // key: [q, eq), val: [eq+1, pair_end)
+        size_t klen = (size_t)(eq - q);
+        size_t vlen = (size_t)(pair_end - (eq + 1));
+        if (klen == 0 || vlen == 0) return -1;
+
+        // match keys (no allocations)
+        if (klen == 2 && strncmp(q, "id", 2) == 0) {
+            // copy value into temp to strtol safely
+            char tmp[4]; // max "255" + '\0'
+            if (vlen >= sizeof(tmp)) return -1;
+            memcpy(tmp, eq + 1, vlen);
+            tmp[vlen] = '\0';
+
+            if (parse_u8(tmp, &m->id) != 0) return -1;
+        }
+        else if (klen == 3 && strncmp(q, "cmd", 3) == 0) {
+            // bounded copy into m->cmd
+            size_t max = SMALL_MSG_SIZE - 1;
+            if (vlen > max) vlen = max;
+            memcpy(m->cmd, eq + 1, vlen);
+            m->cmd[vlen] = '\0';
+        }
+        // else: ignore unknown keys
+
+        q = pair_end;
+        if (q < http && *q == '&') q++;
+    }
+
+    // require both fields
+    if (m->id == 0 && (strstr(in, "id=") != NULL)) {
+        // id=0 is valid; don’t reject it. If you want "must exist", use a flag.
+    }
+    if (m->cmd[0] == '\0') return -1;
+
+    return 0;
+}
+
+
 

@@ -28,7 +28,7 @@ struct SDhandle_t{
 };
 
 struct HTTPhandle_t{
-    char indexPage[4096]; //page served on "/" request
+    char indexPage[TCP_MAX_HTML_SIZE]; //page served on "/" request
 };
 
 struct GRAPHICSHandle_t{
@@ -43,6 +43,11 @@ struct NETHandle_t{
     ip_addr_t gw;
 };
 
+struct Umessage_t{ //user message type
+    u8 id;
+    char cmd[SMALL_MSG_SIZE];
+};
+
 struct SOCKHandle_t{
     s16 sock;
     socklen_t remoteSize;
@@ -50,7 +55,8 @@ struct SOCKHandle_t{
     struct sockaddr_in remote;
     SemaphoreHandle_t xClientsemphrCounting;
     int sd;
-    char buffer[10240]; // 10kb buffer
+    char buffer[NET_BUFFER_SIZE]; // 10kb buffer
+    QueueSetHandle_t mQueue; // message queue
 };
 
 struct SYSHandle_t{
@@ -67,6 +73,9 @@ int main_thread(void* arg);
 void network_thread(void *arg);
 void TCP_server_thread(void *arg);
 void UDP_server_thread(void *arg);
+int messageParseData(const char* in, struct Umessage_t* m);
+//void cReqHandle_TCP(void* arg); //not important for right now
+
 
 
 /* MM2S VDMA CONTROL REGISTER */

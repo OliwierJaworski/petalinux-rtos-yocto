@@ -8,17 +8,20 @@
 */
 #define LOG_VERBOSITY               3
 #define GAME_TASK_PRIORITY          3
+#define SMALL_MSG_SIZE              100 
 
 #define SD_CONFIG_FILE              "config.yaml"
 #define SD_INDEX_HTML               "index.html"
 #define SD_DEFAULT_VOLUME           "0:/"
 
-#define TCP_QUERY_MSG_SIZE          10240
-#define TCP_QUERY_MAX_QUEUE_ITEMS   100
+#define NET_QUEUE_MAX               20 
+#define NET_BUFFER_SIZE             10240
+
 #define TCP_THREAD_STACKSIZE        1024
 #define TCP_HTTP_PORT               80
 #define TCP_MAX_CLIENTS             10
 #define TCP_SETUP_WAIT              500
+#define TCP_MAX_HTML_SIZE           4096
 
 #define UDP_THREAD_STACKSIZE        1024
 #define UDP_PORT                    801

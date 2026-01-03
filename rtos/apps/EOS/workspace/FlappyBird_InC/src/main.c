@@ -7,6 +7,11 @@ int main()
 	memset(&sys, 0,sizeof(struct SYSHandle_t)); // prevent garbage values -> easier debug
 
 	sys.tcpServer.xClientsemphrCounting = xSemaphoreCreateCounting(TCP_MAX_CLIENTS,TCP_MAX_CLIENTS);	
+	sys.tcpServer.mQueue = xQueueCreate(NET_QUEUE_MAX, sizeof(struct Umessage_t));
+	sys.udpServer.mQueue = xQueueCreate(NET_QUEUE_MAX, sizeof(struct Umessage_t));
+	configASSERT(sys.udpServer.mQueue);
+	configASSERT(sys.tcpServer.mQueue);
+	
 	sys.sd.xSDsemphr = xSemaphoreCreateBinary();
 
 	sys.sd.volume = SD_DEFAULT_VOLUME;
