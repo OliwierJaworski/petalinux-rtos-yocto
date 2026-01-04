@@ -35,14 +35,21 @@ struct HTTPhandle_t{
 struct GRAPHICSHandle_t{
     UG_GUI gui ;
     UINTPTR frame_buffers[3];
+    UG_COLOR pColors[MAX_PLAYER_COLORS];
+    UG_COLOR Background; //background
 };
 
 struct PLAYER_t{
-    int x;
-    int y;
-    int xw; 
-    int yw; 
+    UG_WINDOW pModel;
+    UG_COLOR pColor;
+    int x; // upper left cords of player model
+    int y; // upper left cords of player model
+    int xw; // width of player obj 
+    int yw; // height of player obj
+    int vx; // velocity x
+    int vy; //velocity y 
     u32 score;
+    u8 id;  
 };
 
 struct GAMEHandle_t{
@@ -91,7 +98,6 @@ void network_thread(void *arg);
 void TCP_server_thread(void *arg);
 void UDP_server_thread(void *arg);
 int messageParseData(const char* in, struct Umessage_t* m);
-//void cReqHandle_TCP(void* arg); //not important for right now
 
 /* MM2S VDMA CONTROL REGISTER */
 #define VDMA_CONTROL_WRITE(cmd) Xil_Out32(XPAR_AXI_VDMA_0_BASEADDR + VDMA_CTRL_REG, (cmd))

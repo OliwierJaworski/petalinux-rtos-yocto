@@ -111,24 +111,98 @@ main_thread(void* arg){
     return 0;
 }
 
+void Game_Pinit(int id, struct PLAYER_t *p, struct GRAPHICSHandle_t *g){
+    p->x = HDMI_HSIZE/4; //start more left
+    p->y = HDMI_VSIZE/2; //start in the middle
+    p->xw = 10;
+    p->yw = 10;
+    p->pModel;
+    p->pColor = g->pColors[id];
+}
+
 void Game_thread(void *arg){
     struct SYSHandle_t  *sys = (struct SYSHandle_t*) arg;
     struct GAMEHandle_t *game = (struct GAMEHandle_t*) &sys->game;
     struct GRAPHICSHandle_t *graphics = (struct GRAPHICSHandle_t*) &sys->graphics;
     struct SOCKHandle_t *udp = (struct SOCKHandle_t*) &sys->udpServer;
+    struct Umessage_t msgBuffer;
     
     UG_Init(&graphics->gui, vdmaPxlSet_CB ,HDMI_HSIZE, HDMI_VSIZE, &sys->graphics);
-    Xil_DCacheDisable();
-    UG_FillScreen(C_RED);
-    Xil_DCacheEnable();
+    
     //  wait until 2 player ids were collected from the queue skipping the input provided
     //  draw the players different colors
     //  poll the inputs
     //  check collisions
     //  draw structures 
     //  find a way to embed void* p into draw function -> why: no global variables
+    
+    
+    // receive 2 distinct ids with which the game will be played other ids will be skipped
+    int idspot=-1;
     for(;;){
+        //sanitise input
+        msgBuffer.id = 0;
+        msgBuffer.cmd[0] ='\0';  
+        if( xQueueReceive( udp->mQueue, &( msgBuffer ), portMAX_DELAY) == pdPASS ){
+            for(int i=0; i<MAX_PLAYERS; i++){ 
+                if(game->players[i].id != msgBuffer.id){ //check if id already exists in the list
+                    if(game->players[i].id == 0 ){
+                       idspot = i; 
+                       break;                     }
+                }else{ //id already exists
+                    break;
+                }
+            }
+            //found free spot for id
+            if(idspot != -1){
+                    game->players[idspot].id = msgBuffer.id;
+            }
+            
+            if(game->players[MAX_PLAYERS-1].id != 0)
+                break;// quit polling new players
+        } 
+    } 
 
+    // game initialization will come here where
+    // - player model init, player x,y,z init etc...
+    /* ============================================================ */
+    Xil_DCacheDisable();
+    UG_FillScreen(graphics->Background);
+    Xil_DCacheEnable();
+
+    for(int i=0; i<MAX_PLAYERS; i++){ 
+        struct PLAYER_t* p = &game->players[i];
+        Game_Pinit(i, p, graphics); //i = idx = id of array  
+        Xil_DCacheDisable();
+        DrawPlayer(p, graphics); 
+        Xil_DCacheEnable();
+    }
+    /* ============================================================ */
+
+    //sanitise stuff
+    msgBuffer.id = 0;
+    msgBuffer.cmd[0] ='\0';  
+
+    for(;;){
+        // poll for user input with 10 ticks interval
+        if( xQueueReceive( udp->mQueue, &( msgBuffer ), GAME_MSG_WAIT_TICKS) == pdPASS ){
+            for(int i=0; i<MAX_PLAYERS; i++){ //find if player is authorized
+                struct PLAYER_t *p = &game->players[i];
+                if(p->id != msgBuffer.id) 
+                    continue;                    
+
+                // process user input
+                if(strncmp(msgBuffer.cmd, "down",5) == 0)
+                    p->vy = -10; 
+                else if(strncmp(msgBuffer.cmd, "up",3) == 0)
+                    p->vy = 10; 
+
+                if(PlayerCheckBounds(p)){
+                    TranslatePlayer(p->vx, p->vy, p, graphics);
+                } 
+                break;//no need to loop further
+            }                             
+        } // after input polling render the frame
     } 
     vTaskDelete(NULL); 
 }

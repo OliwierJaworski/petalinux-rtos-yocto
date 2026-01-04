@@ -16,6 +16,12 @@ int main()
 
 	sys.sd.volume = SD_DEFAULT_VOLUME;
 
+	configASSERT(MAX_PLAYER_COLORS == 2); //make debugging easier
+	sys.graphics.pColors[0] = C_BLUE_VIOLET;
+	sys.graphics.pColors[1] = C_RED;
+	sys.graphics.Background = C_LIGHT_BLUE;
+
+
 	sys.graphics.frame_buffers[0] = FRAME_BUFFER_PTR1;
 	sys.graphics.frame_buffers[1] = FRAME_BUFFER_PTR2;
 	sys.graphics.frame_buffers[2] = FRAME_BUFFER_PTR3;

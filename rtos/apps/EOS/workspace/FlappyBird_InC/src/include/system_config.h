@@ -9,8 +9,10 @@
 #define LOG_VERBOSITY               3
 #define GAME_TASK_PRIORITY          3
 #define GAME_TASK_STACK_SIZE        1024     
+#define GAME_MSG_WAIT_TICKS         ((TickType_t)10)
 #define SMALL_MSG_SIZE              100 
 #define MAX_PLAYERS                 2
+#define MAX_PLAYER_COLORS           2
 
 #define SD_CONFIG_FILE              "config.yaml"
 #define SD_INDEX_HTML               "index.html"
