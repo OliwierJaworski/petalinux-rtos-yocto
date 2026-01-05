@@ -114,8 +114,8 @@ main_thread(void* arg){
 void Game_Pinit(int id, struct PLAYER_t *p, struct GRAPHICSHandle_t *g){
     p->x = HDMI_HSIZE/4; //start more left
     p->y = HDMI_VSIZE/2; //start in the middle
-    p->xw = 10;
-    p->yw = 10;
+    p->xw = 100;
+    p->yw = 100;
     p->pModel;
     p->pColor = g->pColors[id];
 }
@@ -193,9 +193,9 @@ void Game_thread(void *arg){
 
                 // process user input
                 if(strncmp(msgBuffer.cmd, "down",5) == 0)
-                    p->vy = -10; 
-                else if(strncmp(msgBuffer.cmd, "up",3) == 0)
                     p->vy = 10; 
+                else if(strncmp(msgBuffer.cmd, "up",3) == 0)
+                    p->vy = -10; 
 
                 if(PlayerCheckBounds(p)){
                     TranslatePlayer(p->vx, p->vy, p, graphics);

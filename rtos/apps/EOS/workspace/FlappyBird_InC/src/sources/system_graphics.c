@@ -18,7 +18,7 @@ vdmaPxlSet_CB(UG_S16 x, UG_S16 y, UG_COLOR c, void* arg){
 
 void DrawPlayer(struct PLAYER_t *p, struct GRAPHICSHandle_t *g){
 	Xil_DCacheDisable();
-    UG_FillFrame(p->x, p->y, p->xw, p->yw, p->pColor);
+    UG_FillFrame(p->x, p->y, p->x + p->xw, p->y + p->yw, p->pColor);
     Xil_DCacheEnable();
 }   
 
@@ -36,9 +36,10 @@ void TranslatePlayer(int x, int y, struct PLAYER_t* p, struct GRAPHICSHandle_t *
 	
 	Xil_DCacheDisable();
 	if(y < 0){ //up
-    	UG_FillFrame(p->x, p->y + p->yw + y, p->xw, -y, g->Background);
+			   //hier iets mis
+    	UG_FillFrame(p->x, p->y + p->yw + y, p->x + p->xw -x, p->y + p->yw, g->Background);
 	}else if(y > 0){ //down
-		UG_FillFrame(p->x, p->y, p->xw, y, g->Background);
+    	UG_FillFrame(p->x, p->y, p->x + p->xw -x, p->y + y, g->Background);
 	}
 	p->x +=x; 
 	p->y +=y;
