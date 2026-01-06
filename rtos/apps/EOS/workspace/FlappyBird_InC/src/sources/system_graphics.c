@@ -21,6 +21,11 @@ void DrawPlayer(struct PLAYER_t *p, struct GRAPHICSHandle_t *g){
     UG_FillFrame(p->x, p->y, p->x + p->xw, p->y + p->yw, p->pColor);
     Xil_DCacheEnable();
 }   
+void DrawObj(struct GOBJECT_t*obj, struct GRAPHICSHandle_t *g){
+	Xil_DCacheDisable();
+    UG_FillFrame(obj->x, obj->y, obj->x + obj->xw, obj->y + obj->yw, obj->Color);
+    Xil_DCacheEnable();
+} 
 
 int PlayerCheckBounds(struct PLAYER_t *p){
 	//above or under out of bound
@@ -36,7 +41,6 @@ void TranslatePlayer(int x, int y, struct PLAYER_t* p, struct GRAPHICSHandle_t *
 	
 	Xil_DCacheDisable();
 	if(y < 0){ //up
-			   //hier iets mis
     	UG_FillFrame(p->x, p->y + p->yw + y, p->x + p->xw -x, p->y + p->yw, g->Background);
 	}else if(y > 0){ //down
     	UG_FillFrame(p->x, p->y, p->x + p->xw -x, p->y + y, g->Background);
@@ -45,4 +49,40 @@ void TranslatePlayer(int x, int y, struct PLAYER_t* p, struct GRAPHICSHandle_t *
 	p->y +=y;
     DrawPlayer(p, g);
     Xil_DCacheEnable();
+}
+
+void TranslateObj(int x, int y, struct GOBJECT_t* obj, struct GRAPHICSHandle_t *g){
+	Xil_DCacheDisable();
+	if(x < 0){ //left
+    	UG_FillFrame(obj->x+obj->xw+x, obj->y, obj->x+obj->xw , obj->y+obj->yw , C_LIGHT_BLUE);
+	}else if(x > 0){ //right
+    	UG_FillFrame(obj->x, obj->y, obj->x + x, obj->y + obj->yw, C_LIGHT_BLUE);
+	}
+	obj->x +=x; 
+	obj->y +=y;
+	DrawObj(obj,g);
+    Xil_DCacheEnable();	
+}
+
+int PlayerCollisionCheck(struct PLAYER_t *p, struct GAMEHandle_t *g){
+	int PRightCollide =(p->x+p->xw);
+	int PLowerCollide =(p->y+p->yw);
+
+	for(int i=0; i<2;i++){
+		struct GOBJECT_t *obj = &g->gameObj[i];
+		int ObjLeftCollide =obj->x;
+		int ObjLowerCollide =obj->y+obj->yw;
+		int ObjHigherCollide =obj->y;
+		if(obj->y > HDMI_VSIZE/2){ //check highercollider
+			if(  PRightCollide >= ObjLeftCollide && (PLowerCollide >= ObjHigherCollide) ){
+				LOG_UART(LOG_DEBUG,"COLLIDED WITH LOWER BAR", NULL);
+				exit(1);
+			}	
+		} else{
+			if(  PRightCollide >= ObjLeftCollide && (p->y <= (obj->y+obj->yw)) ){
+				LOG_UART(LOG_DEBUG,"COLLIDED WITH LOWER BAR", NULL);
+				exit(1);
+			}
+		}
+	}
 }

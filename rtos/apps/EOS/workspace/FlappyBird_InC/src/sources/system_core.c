@@ -169,7 +169,9 @@ void Game_thread(void *arg){
     Xil_DCacheDisable();
     UG_FillScreen(graphics->Background);
     Xil_DCacheEnable();
-
+    for(int i=0; i<2;i++){
+        DrawObj(&game->gameObj[i], game);
+    }
     for(int i=0; i<MAX_PLAYERS; i++){ 
         struct PLAYER_t* p = &game->players[i];
         Game_Pinit(i, p, graphics); //i = idx = id of array  
@@ -184,6 +186,7 @@ void Game_thread(void *arg){
     msgBuffer.cmd[0] ='\0';  
 
     for(;;){
+
         // poll for user input with 10 ticks interval
         if( xQueueReceive( udp->mQueue, &( msgBuffer ), GAME_MSG_WAIT_TICKS) == pdPASS ){
             for(int i=0; i<MAX_PLAYERS; i++){ //find if player is authorized
@@ -203,6 +206,34 @@ void Game_thread(void *arg){
                 break;//no need to loop further
             }                             
         } // after input polling render the frame
+        for(int i=0; i<2;i++){
+            TranslateObj(game->gameObj[i].vx, game->gameObj[i].vy, &game->gameObj[i], game);
+        }
+        for(int j=0;j<MAX_PLAYERS; j++){
+            PlayerCollisionCheck(&game->players[j], game); 
+        }
+        if (game->gameObj[0].x <= 0 || game->gameObj[1].x <= 0) {
+
+            int gap = 200;
+            int max = (rand() % ((HDMI_VSIZE/2) - gap)); 
+
+            // upper bar
+            game->gameObj[0].x  = HDMI_HSIZE - 50;
+            game->gameObj[0].y  = 0;
+            game->gameObj[0].xw = 50;
+            game->gameObj[0].yw = max;
+            game->gameObj[0].vx = -10;
+
+            max = (rand() % ((HDMI_VSIZE/2) - gap)); 
+            // lower bar
+            game->gameObj[1].x  = HDMI_HSIZE - 50;
+            game->gameObj[1].y  = HDMI_VSIZE - max - gap;
+            game->gameObj[1].xw = 50;
+            game->gameObj[1].yw = max + gap;
+            game->gameObj[1].vx = -10;
+            LOG_UART(LOG_DEBUG,"USERS RECEIVE 1 point", NULL);
+        }
+
     } 
     vTaskDelete(NULL); 
 }

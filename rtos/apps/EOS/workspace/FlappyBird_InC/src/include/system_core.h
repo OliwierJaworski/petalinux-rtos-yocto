@@ -52,9 +52,20 @@ struct PLAYER_t{
     u8 id;  
 };
 
+struct GOBJECT_t{
+    UG_COLOR Color;
+    int x; // upper left cords of player model
+    int y; // upper left cords of player model
+    int xw; // width of player obj 
+    int yw; // height of player obj
+    int vx; // velocity x
+    int vy; //velocity y 
+};
+
 struct GAMEHandle_t{
     TaskHandle_t xGameHandle;
     struct PLAYER_t players[MAX_PLAYERS];
+    struct GOBJECT_t gameObj[2];
 };
 
 struct NETHandle_t{

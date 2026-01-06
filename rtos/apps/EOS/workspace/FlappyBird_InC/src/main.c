@@ -20,6 +20,21 @@ int main()
 	sys.graphics.pColors[0] = C_BLUE_VIOLET;
 	sys.graphics.pColors[1] = C_RED;
 	sys.graphics.Background = C_LIGHT_BLUE;
+	for(int i=0; i<2; i++){
+		sys.game.gameObj[i].Color = C_DARK_GRAY;
+	}
+	//upper bar -> start right
+	sys.game.gameObj[0].x = HDMI_HSIZE-50; 
+	sys.game.gameObj[0].y = 0; 
+	sys.game.gameObj[0].xw = 50;
+	sys.game.gameObj[0].yw= 100;
+	sys.game.gameObj[0].vx = -10;
+	//lower bar
+	sys.game.gameObj[1].x = HDMI_HSIZE-50; 
+	sys.game.gameObj[1].y = HDMI_VSIZE-100; 
+	sys.game.gameObj[1].xw = 50;
+	sys.game.gameObj[1].yw= 100;
+	sys.game.gameObj[1].vx = -10;
 
 
 	sys.graphics.frame_buffers[0] = FRAME_BUFFER_PTR1;
