@@ -27,3 +27,5 @@ rtos/apps/EOS/dbg_init_A9_0.tcl
 rtos/apps/EOS/workspace/FlappyBird_InC/Debug
 rtos/apps/EOS/workspace/FlappyBird_InC/Debug
 rtos/apps/EOS/workspace/FlappyBird_InC/Debug
+/petalinux-yocto/sdk.sh
+/petalinux-yocto/linux-images/temp_prj
