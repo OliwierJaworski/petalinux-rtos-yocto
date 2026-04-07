@@ -17,6 +17,8 @@
     xlnx,num-fstores = <0x3>;
     dmas = <&axi_vdma_0 0>;
     dma-names = "vdma0";
+    status = "okay";
+    reg = <0x1 0x0>;
     };
 
     frame_buffer0: frame_buffer@0 {                      
