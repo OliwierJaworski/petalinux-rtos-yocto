@@ -1,5 +1,5 @@
 # path to the petalinux kernel source tree
-KERNEL_DIR ?= $(KERNEL_src)
+KERNEL_DIR ?= $(KERNEL_SRC)
 # covers armv4–armv7
 ARCH ?= arm 
 CROSS_COMPILE ?= arm-xilinx-linux-gnueabi-
