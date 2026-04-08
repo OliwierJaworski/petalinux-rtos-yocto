@@ -1,3 +1,4 @@
+#include "asm-generic/errno-base.h"
 #include "linux/dma-direction.h"
 #include "linux/dma-mapping.h"
 #include "linux/dmaengine.h"
@@ -8,8 +9,17 @@
 #include <linux/platform_device.h>
 #include <linux/of_dma.h>
 #include <linux/io.h>
+#include "vdma_overlay.h"
 
 static unsigned int frm_cnt;
+
+//reserved memory/framebuffer info
+struct rmem_fb_info{
+  struct device_node *fb,*rmem;
+  const __be32 *reg; //big endian 32 register
+  u32 addr, size;
+  int err;
+};
 
 struct vdmaOverlay_info{
   struct platform_device *pdev;
@@ -21,13 +31,9 @@ struct vdmaOverlay_info{
   dma_cookie_t tx_cookie;
   enum dma_ctrl_flags flags;
   dma_addr_t src[3];
+  struct rmem_fb_info fb_info;
 };
 
-struct vdmaoverlay_chan {
-	struct list_head node;
-	struct dma_chan *chan;
-	struct list_head threads;
-};
 
 static struct dma_interleaved_template xt;
 
@@ -37,35 +43,9 @@ static int vdmaOverlay_configure(struct vdmaOverlay_info *vinfo){
   struct dma_device *tx_dev = vinfo->tx->device;
   struct dma_async_tx_descriptor *txd = NULL; 
   struct xilinx_vdma_config *cfg = &vinfo->cfg;
-/**
- * struct xilinx_vdma_config - VDMA Configuration structure
- * @frm_dly: Frame delay
- * @gen_lock: Whether in gen-lock mode
- * @master: Master that it syncs to
- * @frm_cnt_en: Enable frame count enable
- * @park: Whether wants to park
- * @park_frm: Frame to park on
- * @coalesc: Interrupt coalescing threshold
- * @delay: Delay counter
- * @reset: Reset Channel
- * @ext_fsync: External Frame Sync source
- * @vflip_en:  Vertical Flip enable
- */
-/*
-  struct xilinx_vdma_config {
-	int frm_dly;
-	int gen_lock;
-	int master;
-	int frm_cnt_en;
-	int park;
-	int park_frm;
-	int coalesc;
-	int delay;
-	int reset;
-	int ext_fsync;
-	bool vflip_en;
-};*/
-  cfg->gen_lock = 0;    
+
+  // -> linux-xlnx/include/linux/dma
+  cfg->gen_lock = 1;    
   cfg->master = 0;      
   cfg->frm_cnt_en = 0;
   cfg->park = 0;
@@ -75,7 +55,6 @@ static int vdmaOverlay_configure(struct vdmaOverlay_info *vinfo){
   xilinx_vdma_channel_set_config(vinfo->tx, cfg);
    
   for(int i=0;i<frm_cnt;i++){
-    pr_info("running setup loop it:%d\n",i);
     vinfo->src[i] = dma_map_resource(tx_dev->dev, vinfo->src_addr, (1920*1080*4), DMA_TO_DEVICE,0);
     if(dma_mapping_error(tx_dev->dev, vinfo->src[i])){
       pr_info("failed to map dma\n");
@@ -83,28 +62,28 @@ static int vdmaOverlay_configure(struct vdmaOverlay_info *vinfo){
     }
     xt.src_start = vinfo->src[i];
     xt.dir = DMA_MEM_TO_DEV;
-    xt.numf = 1080;
-    xt.sgl[0].size = (1920*4);
+    xt.numf = VSIZE;
+    xt.sgl[0].size = STRIDE;
     xt.sgl[0].icg = 0;
     xt.frame_size = 1;
     txd = tx_dev->device_prep_interleaved_dma(vinfo->tx, &xt, vinfo->flags);
-    //txd = tx_dev->device_prep_dma_cyclic(vinfo->tx, vinfo->src[i], (7680*1080), (7680*1080),DMA_MEM_TO_DEV,vinfo->flags); 
     if(IS_ERR(txd)){
-      dma_release_channel(vinfo->tx);
       printk("Error: %ld, in device_prep_dma_cyclic", PTR_ERR(txd));
       return PTR_ERR(txd);
     } 
 
     //dmaengine_submit() will not start the DMA operation, it merely adds it to the pending queue.
-    //vinfo->tx_cookie = txd->tx_submit(txd);
     vinfo->tx_cookie = txd->tx_submit(txd);
   }
  
   if(!txd){
     for(int i=0;i<frm_cnt;i++){
-      dma_unmap_resource(tx_dev->dev, vinfo->src[i], 1920*1080*4, DMA_TO_DEVICE, 0);
+      dma_unmap_resource(tx_dev->dev, vinfo->src[i], BUFFER_SIZE, DMA_TO_DEVICE, 0);
     }
-    pr_warn("error during prep?\n");
+    if(IS_ERR(txd)){
+      printk("Error: %ld, in device_prep_dma_cyclic", PTR_ERR(txd));
+      return PTR_ERR(txd);
+    }
   } 
 
   dma_async_issue_pending(vinfo->tx);
@@ -112,16 +91,70 @@ static int vdmaOverlay_configure(struct vdmaOverlay_info *vinfo){
   return 0;
 }
 
+//checks whether framebuffer is present in device tree and has been set up properly
+static int rmem_fb_check(struct platform_device *pdev, struct rmem_fb_info * fbi){
+  //check if reserved memory has been added to dev tree
+  fbi->rmem = of_find_node_by_path("/reserved-memory");
+  if(!fbi->rmem){
+    dev_err(&pdev->dev, "Cannot find /reserved-memory node\n");
+    return -ENODEV;
+  }
+   
+  //find framebuffer node inside reserved memory
+  fbi->fb = of_find_node_by_name(fbi->rmem, "framebuffer");
+  of_node_put(fbi->fb);//release hold on parent -> prevent memleak
+  if(!fbi->fb){
+    dev_err(&pdev->dev, "Cannot find framebuffer node in /reserved-memory\n");
+    return -ENODEV;
+  } 
+  
+  fbi->reg = of_get_property(fbi->fb,"reg", NULL); 
+  if(!fbi->reg){
+    dev_err(&pdev->dev, "Cannot find framebuffer node in /reserved-memory\n");
+    of_node_put(fbi->fb);
+    return -EINVAL;
+  }
+
+  //reg holds 2 32bit values -> read 32, move 1 cell(32bits) and read 32
+  fbi->addr = of_read_number(fbi->reg, 1);
+  fbi->size = of_read_number(fbi->reg + 1, 1);
+
+  //release hold
+  of_node_put(fbi->fb);
+
+  dev_info(&pdev->dev, "Found framebuffer at 0x%x, size = 0x%x\n", fbi->addr, fbi->size);
+  return 0;
+}
+
 static int vdmaOverlay_probe(struct platform_device *pdev){
   dev_info(&pdev->dev, "OJ -  VDMA overlay Driver Probed!!\n");
 
-  int err;
+  int err,r;
+
   struct vdmaOverlay_info *vinfo = kmalloc(sizeof(struct vdmaOverlay_info), GFP_KERNEL);
   if (!vinfo)
     return -ENOMEM;
+
+  //default all settings to 0
   memset(&vinfo->cfg, 0, sizeof(struct xilinx_vdma_config));
+
+  //function checks whether framebuffer is present
+  r = rmem_fb_check(pdev, &vinfo->fb_info);
+  if(r != 0){
+    kfree(vinfo);
+    return r;
+  }
+
+  // enough space for 3 frames?
+  if(vinfo->fb_info.size < (FB_ADDR(vinfo)*frm_cnt)){
+
+    pr_err("oj-vdmaoverlay: not enough space on framebuffer node for %d vdma frames\n",frm_cnt); 
+    kfree(vinfo);
+    return -ENOSPC;
+  } 
+
   vinfo->pdev = pdev;
-  vinfo->src_addr = (phys_addr_t)0x10000000;
+  vinfo->src_addr = (phys_addr_t) FB_ADDR(vinfo);
   vinfo->flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
 
   // search whether it has given property
@@ -144,8 +177,6 @@ static int vdmaOverlay_probe(struct platform_device *pdev){
     return err;
   }
   
-  //here will go code configuring everything
-  
   err = vdmaOverlay_configure(vinfo);
   if(err){// free dma resource
     kfree(vinfo);
@@ -166,14 +197,15 @@ static int vdmaOverlay_remove(struct platform_device *pdev){
   
   //struct dma_chan *tx;
   struct vdmaOverlay_info *vinfo = platform_get_drvdata(pdev);
-    if (!vinfo)
-        return 0;
+  if (!vinfo)//rip in this situation will have to restart board to get access to dma channel again
+      return 0;
   
   //must be called before so termination can be done succesfully
   dmaengine_synchronize(vinfo->tx);
   dmaengine_terminate_async(vinfo->tx);
+
   for(int i=0;i<frm_cnt;i++)
-    dma_unmap_resource(vinfo->tx->device->dev, vinfo->src[i], 1920*1080*4, DMA_TO_DEVICE, 0);
+    dma_unmap_resource(vinfo->tx->device->dev, vinfo->src[i], BUFFER_SIZE , DMA_TO_DEVICE, 0);
   //release exclusive access to dma channel
   dma_release_channel(vinfo->tx);
   kfree(vinfo);

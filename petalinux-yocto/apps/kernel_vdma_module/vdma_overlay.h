@@ -1,5 +1,4 @@
 /**
- * Copyright (C) 2021 Xilinx, Inc
  * Copyright (C) 2025 Oliwier Jaworski 
  * Licensed under the Apache License, Version 2.0 (the "License"). You may
  * not use this file except in compliance with the License. A copy of the
@@ -14,19 +13,11 @@
  * under the License.
  */
 
-#define BUFFER_SIZE (128 * 1024* 4)	 	/* must match driver exactly */
-#define BUFFER_COUNT 3 					/* driver only */
+#define FB_ADDR(vinfo) vinfo->fb_info.addr
 
-#define TX_BUFFER_COUNT 	1				/* app only, must be <= to the number in the driver */
-#define RX_BUFFER_COUNT 	32				/* app only, must be <= to the number in the driver */
-#define BUFFER_INCREMENT	1				/* normally 1, but skipping buffers (2) defeats prefetching in the CPU */
+#define VSIZE 1080
+#define HSIZE 1920 
+#define RGBA 4
+#define STRIDE (HSIZE*RGBA)
+#define BUFFER_SIZE (VSIZE* HSIZE* 4)	 	/* must match driver exactly */
 
-#define FINISH_XFER 	_IOW('a','a',int32_t*)
-#define START_XFER 		_IOW('a','b',int32_t*)
-#define XFER 			_IOR('a','c',int32_t*)
-
-struct channel_buffer {
-	unsigned int buffer[BUFFER_SIZE / sizeof(unsigned int)];
-	enum proxy_status { PROXY_NO_ERROR = 0, PROXY_BUSY = 1, PROXY_TIMEOUT = 2, PROXY_ERROR = 3 } status;
-	unsigned int length;
-} __attribute__ ((aligned (1024)));		/* 64 byte alignment required for DMA, but 1024 handy for viewing memory */
