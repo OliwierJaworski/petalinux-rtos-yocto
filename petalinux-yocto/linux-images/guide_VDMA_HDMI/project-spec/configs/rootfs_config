@@ -3841,6 +3841,7 @@ CONFIG_Init-manager-sysvinit=y
 CONFIG_libsdl2=y
 # CONFIG_gpio-demo is not set
 # CONFIG_peekpoke is not set
+CONFIG_vdma-overlay=y
 
 #
 # PetaLinux RootFS Settings
